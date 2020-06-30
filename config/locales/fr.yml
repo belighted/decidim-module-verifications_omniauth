@@ -1,0 +1,35 @@
+fr:
+  decidim:
+    authorization_handlers:
+      admin:
+        omniauth:
+          help:
+          - Validate with an external OmniAuth account
+
+      omniauth_anti_affinity:
+        explanation: Vous devez vous connecter avec un autre compte pour valider cette autorisation.
+      omniauth_decidim_handler:
+        name: Omniauth Decidim
+
+    verifications:
+      metadata:
+        content:
+          title: Données issues de l'autorisation
+      omniauth:
+        authorizations:
+          new:
+            error: Impossible de confirmer votre compte avec ce service externe.
+            success: Votre compte a été confirmé avec succès.
+        errors:
+          anti_affinity: "Vous ne pouvez pas être connecter avec ces 2 identités en même temps: %{anti_affinity}"
+          minimum_age: "Vous devez avoir au moins %{minimum_age} pour confirmer votre compte."
+        admin:
+          authorizations:
+            index:
+              actions:
+                metadata: Voir les informations
+              fields:
+                name: Utilisateur
+                granted_at: Autorisé le
+                uid: UID
+              title: Autorisations pour %{handler_name}
