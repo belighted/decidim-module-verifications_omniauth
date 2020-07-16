@@ -14,6 +14,13 @@ module Decidim
           get "callback", to: "authorizations#callback"
           root to: "authorizations#new"
         end
+
+        initializer "extends" do |app|
+          Dir.glob("#{Decidim::Verifications::Omniauth::Engine.root}/lib/extends/verifications_omniauth/**/*.rb").each do |override|
+            require_dependency override
+          end
+        end
+
       end
     end
   end

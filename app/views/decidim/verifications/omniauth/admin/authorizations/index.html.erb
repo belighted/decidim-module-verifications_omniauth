@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title">
+      <%= t ".title", handler_name: humanize_handler_name(handler_name) %>
+    </h2>
+  </div>
+  <div class="card-section">
+    <div class="table-scroll">
+      <table class="authorizations table-list">
+        <thead>
+        <tr>
+          <th><%= t ".fields.name" %></th>
+          <th><%= t ".fields.uid" %></th>
+          <th><%= t ".fields.granted_at" %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @authorizations.each do |authorization| %>
+          <tr data-authorization-id="<%= authorization.id %>">
+            <td><%= authorization.user.name %></td>
+            <td>
+              <%= authorization.unique_id %>
+            </td>
+            <td><%= l authorization.granted_at, format: :long %></td>
+            <td class="table-list__actions">
+              <% if allowed_to?(:index, :authorization) && authorization.metadata.present? %>
+                <%= metadata_modal_button_to authorization, method: :get, remote: true, class: "button tiny hollow" do %>
+                  <%= icon "shield" %>
+                  <%= t ".actions.metadata" %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <%= paginate @authorizations, theme: "decidim" %>
+    </div>
+  </div>
+</div>
+<%= render partial: "decidim/shared/authorization_modal" %>
+<%= javascript_include_tag "decidim/admin/reveal" %>

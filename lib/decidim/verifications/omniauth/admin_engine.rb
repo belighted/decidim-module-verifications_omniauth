@@ -17,6 +17,13 @@ module Decidim
           end
           root to: "authorizations#index"
         end
+
+        initializer "extends" do |app|
+          Dir.glob("#{Decidim::Verifications::Omniauth::Engine.root}/lib/extends/verifications_omniauth/**/*.rb").each do |override|
+            require_dependency override
+          end
+        end
+
       end
     end
   end
