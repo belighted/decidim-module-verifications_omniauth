@@ -200,7 +200,7 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def is_saml_callback?
-      request.path.end_with?("saml/callback")
+      request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
     end
 
   end
