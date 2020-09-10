@@ -2,7 +2,12 @@
 
 ## About
 
-Adds a new omniauth options for authorization in the verifications workflow.
+Adds a new custom authorization options for the verifications workflow.
+This module introduce following authorization strategies:
+
+* Saml
+
+* CSAM
 
 ## How to install
 
@@ -18,25 +23,32 @@ And then execute:
 bundle install
 ```
 
-Install migrations from the extension.
-```bash
-bundle exec rails decidim-verifications_omniauth:install:migrations
-```
-
-Add a saml workflow for verifications scope in the decidim initializer in the `{APP}/config/initializers/decidim.rb`
+Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim-verifications.rb`
 
 ```ruby
+require 'decidim/verifications/omniauth/bosa_action_authorizer'
+
 Decidim::Verifications.register_workflow(:saml) do |workflow|
   workflow.engine = Decidim::Verifications::Omniauth::Engine
   workflow.admin_engine = Decidim::Verifications::Omniauth::AdminEngine
   workflow.action_authorizer = "Decidim::Verifications::Omniauth::BosaActionAuthorizer"
-  workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"
+  # workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"
   workflow.omniauth_provider = :saml
+  workflow.minimum_age = 16
+end
+
+Decidim::Verifications.register_workflow(:csam) do |workflow|
+  workflow.engine = Decidim::Verifications::Omniauth::Engine
+  workflow.admin_engine = Decidim::Verifications::Omniauth::AdminEngine
+  workflow.action_authorizer = "Decidim::Verifications::Omniauth::BosaActionAuthorizer"
+  # workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"
+  workflow.omniauth_provider = :csam
   workflow.minimum_age = 16
 end
 ```
 
-Add a translations keys for all supported locales in the `{APP}/config/locales`, eg:
+Add a translations keys for new omniauth_providers for all supported locales in the `{APP}/config/locales`.
+Example for `{APP}/config/locales/en.yml`:
 
 ```yaml
 en:
@@ -45,14 +57,50 @@ en:
       csam:
         name: CSAM
         explanation: Validate with your CSAM account
+      saml:
+        name: CSAM eID
+        explanation: Validate with your CSAM eID account
       admin:
         csam:
           help:
             - Validate with a CSAM account
+        saml:
+          help:
+            - Validate with a CSAM eID account
+```
+
+In the application's `config/secrets.yml` add following options in the omniauth section:
+
+```yaml
+ omniauth:
+   saml:
+     enabled: true
+   csam:
+     enabled: true
 ```
 
 ## Usage
 
+As a system admin you can enable a new authorization strategies for organization in the following steps:
+
+* sign in to the `/system`
+
+* Go to organization `Edit` view
+
+* Scroll down to the `Omniauth settings` section and enable strategy
+
+* Set configuration option for the enabled strategy
+
+
+For each organization you have to set valid configuration options:
+
+* Saml
+
+![Saml setup](doc/assets/saml.png)
+
+* CSAM
+
+![CSAM setup](doc/assets/csam.png)
 
 ## Testing
 
@@ -60,8 +108,6 @@ Create a dummy app in the `spec` dir (if not present):
 
 ```bash
 bin/rails decidim:generate_external_test_app
-cd spec/decidim_dummy_app/
-bundle exec rails decidim-verifications_omniauth:install:migrations
 RAILS_ENV=test bundle exec rails db:migrate
 ```
 
