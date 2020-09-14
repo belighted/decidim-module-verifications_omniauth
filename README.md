@@ -3,11 +3,10 @@
 ## About
 
 Adds a new custom authorization options for the verifications workflow.
-This module introduce following authorization strategies:
+This module introduce `Saml` authorization strategy for [CSAM](https://www.csam.be/en/index.html).
 
-* Saml
-
-* CSAM
+Core utils were extracted from the [OpenSourcePolitics/decidim](https://github.com/OpenSourcePolitics/decidim/tree/alt/petition_merge)
+as an extension, to provide functionality without forking the decidim.
 
 ## How to install
 
@@ -23,7 +22,7 @@ And then execute:
 bundle install
 ```
 
-Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim-verifications.rb`
+Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim.rb`
 
 ```ruby
 require 'decidim/verifications/omniauth/bosa_action_authorizer'
@@ -37,6 +36,7 @@ Decidim::Verifications.register_workflow(:saml) do |workflow|
   workflow.minimum_age = 16
 end
 
+# Add secondary workflow based on the same engine, but you you need to change the omniauth_provider
 Decidim::Verifications.register_workflow(:csam) do |workflow|
   workflow.engine = Decidim::Verifications::Omniauth::Engine
   workflow.admin_engine = Decidim::Verifications::Omniauth::AdminEngine
