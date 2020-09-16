@@ -19,4 +19,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,lib}/**/*", "LICENSE-AGPLv3.txt", "Rakefile", "README.md"]
 
   s.add_dependency "decidim-core", Decidim::VerificationsOmniauth.version
+  s.add_dependency "decidim-verifications", Decidim::VerificationsOmniauth.version
+  s.add_dependency "savon", "~> 2.12.0"
+  s.add_dependency "signer"
+  s.add_dependency "omniauth-saml", "~> 1.10"
 end
