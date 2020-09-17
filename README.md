@@ -104,18 +104,30 @@ For each organization you have to set valid configuration options:
 
 ## Testing
 
-Create a dummy app in the `spec` dir (if not present):
+Create a dummy app in the `spec` dir:
 
 ```bash
-bin/rails decidim:generate_external_test_app
-RAILS_ENV=test bundle exec rails db:migrate
+DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password>  bundle exec rake decidim:generate_external_test_app
 ```
 
-And run tests:
+Apply changes to decidim_dummy_app and provide configuration mentioned in [How to](#how-to-install) section.
+
+Run tests:
 
 ```bash
 bundle exec rspec spec
 ```
+
+### Test code coverage
+
+If you want to generate the code coverage report for the tests, you can use the SIMPLECOV=1
+environment variable in the rspec command as follows:
+
+```bash
+$ SIMPLECOV=1 bundle exec rspec
+```
+
+This will generate a folder named coverage in the project root which contains the code coverage report.
 
 ## Contributing
 
