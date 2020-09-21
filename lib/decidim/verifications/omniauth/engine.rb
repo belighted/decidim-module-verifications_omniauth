@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Decidim
   module Verifications
     module Omniauth
@@ -5,9 +7,6 @@ module Decidim
 
       class Engine < ::Rails::Engine
         isolate_namespace Decidim::Verifications::Omniauth
-
-        paths["db/migrate"] = nil
-        paths["lib/tasks"] = nil
 
         routes do
           get "authorize", to: "authorizations#new"
