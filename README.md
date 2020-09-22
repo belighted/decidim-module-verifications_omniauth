@@ -104,7 +104,7 @@ openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
   <(echo "[req]"; 
     echo distinguished_name=req; 
     echo "[san]"; 
-    echo subjectAltName=[to fill in]
+    echo subjectAltName=DNS:[your_domain]
     ) \
   -subj "/CN=[your domain]"
 ```
