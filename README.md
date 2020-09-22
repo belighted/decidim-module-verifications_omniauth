@@ -2,11 +2,11 @@
 
 ## About
 
-Adds a new custom authorization options for the verifications workflow.
-This module introduce `Saml` authorization strategy for [CSAM](https://www.csam.be/en/index.html).
+This is an extension of Decidim. Its main purpose is to add two new options for the verifications workflow:
+* [CSAM](https://www.csam.be/en/index.html) which is the official Identity Providers (IDP) from the Belgian Government.
+* SAML: for generic integration with external Identity Providers (IDP)
 
-Core utils were extracted from the [OpenSourcePolitics/decidim](https://github.com/OpenSourcePolitics/decidim/tree/alt/petition_merge)
-as an extension, to provide functionality without forking the decidim.
+[Learn more about CSAM](https://www.csam.be/en/index.html).
 
 ## How to install
 
@@ -24,6 +24,7 @@ bundle install
 
 Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim.rb`
 
+_For SAML_
 ```ruby
 require 'decidim/verifications/omniauth/bosa_action_authorizer'
 
@@ -31,21 +32,24 @@ Decidim::Verifications.register_workflow(:saml) do |workflow|
   workflow.engine = Decidim::Verifications::Omniauth::Engine
   workflow.admin_engine = Decidim::Verifications::Omniauth::AdminEngine
   workflow.action_authorizer = "Decidim::Verifications::Omniauth::BosaActionAuthorizer"
-  # workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"
   workflow.omniauth_provider = :saml
   workflow.minimum_age = 16
 end
+```
 
-# Add secondary workflow based on the same engine, but you you need to change the omniauth_provider
+_For CSAM_
+```
 Decidim::Verifications.register_workflow(:csam) do |workflow|
   workflow.engine = Decidim::Verifications::Omniauth::Engine
   workflow.admin_engine = Decidim::Verifications::Omniauth::AdminEngine
   workflow.action_authorizer = "Decidim::Verifications::Omniauth::BosaActionAuthorizer"
-  # workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"
   workflow.omniauth_provider = :csam
   workflow.minimum_age = 16
 end
 ```
+You can specify the form you want to use (optionnaly) by adding the next line to your configuration:
+`workflow.form = "Decidim::Verifications::Omniauth::OmniauthAuthorizationForm"`
+
 
 Add a translations keys for new omniauth_providers for all supported locales in the `{APP}/config/locales`.
 Example for `{APP}/config/locales/en.yml`:
@@ -69,15 +73,47 @@ en:
             - Validate with a CSAM eID account
 ```
 
+You can also specify the default value fo parameters in your Decidim app for the bootstrap. Once saved, only the values present in the database will be used. 
 In the application's `config/secrets.yml` add following options in the omniauth section:
 
 ```yaml
- omniauth:
-   saml:
-     enabled: true
-   csam:
-     enabled: true
+  omniauth:
+    saml:
+      enabled: true
+    csam:
+      enabled: true
+      provider_name:                  [name of the application on IDP side]
+      icon_path:                      "eid-logo.svg"
+      idp_sso_target_url:             [URL oof IDP for sign-in]
+      assertion_consumer_service_url: "https:/[your domain]/users/auth/csam/callback"
+      authn_context:                  [level of authentication, e.g. "urn:be:fedict:iam:fas:enterprise:Level300"]
+      issuer:                         "https://[your domain]/users/auth/csam/metadata"
+      protocol_binding:               "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+      idp_slo_target_url:             "https://[your domain]/users/auth/csam/spslo"
+      idp_cert: ""
+      idp_key: ""
 ```
+
+You will need also to generate a private key together with a certificate that will be used for CSAM. 
+For SAML, depending on the configuration of the IDP, you might required a certificate too.
+You can find plenty of documentation on Internet on how to generate them. However, here is a shortcut using `openssl`.
+
+```
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+  -keyout monopinion.key -out monopinion.crt -extensions san -config \
+  <(echo "[req]"; 
+    echo distinguished_name=req; 
+    echo "[san]"; 
+    echo subjectAltName=DNS:[your_domain]
+    ) \
+  -subj "/CN=[your domain]"
+```
+
+## Belgium: CSAM and Person Services
+
+If you have access to the API of person services, you can enrich the configuration of CSAM with them. 
+It will allow the application to fetch some personal data about the user to allow a better characterization of the person.
+It can be useful to have for instance, region/city-based features.
 
 ## Usage
 
@@ -94,9 +130,9 @@ As a system admin you can enable a new authorization strategies for organization
 
 For each organization you have to set valid configuration options:
 
-* Saml
+* SAML
 
-![Saml setup](doc/assets/saml.png)
+![SAML setup](doc/assets/saml.png)
 
 * CSAM
 
@@ -132,6 +168,9 @@ This will generate a folder named coverage in the project root which contains th
 ## Contributing
 
 See [Decidim](https://github.com/decidim/decidim).
+
+Core utils were extracted from the [OpenSourcePolitics/decidim](https://github.com/OpenSourcePolitics/decidim/tree/alt/petition_merge)
+as an extension, to provide functionality without forking the decidim.
 
 ## License
 
