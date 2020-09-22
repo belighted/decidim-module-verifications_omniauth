@@ -38,8 +38,8 @@ module OmniAuth
              logout_responses_signed: true, # Enable or not signature on Logout Response
              want_assertions_signed: true, # Enable or not the requirement of signed assertion
              metadata_signed: true, # Enable or not signature on Metadata
-             digest_method: XMLSecurity::Document::SHA1,
-             signature_method: XMLSecurity::Document::RSA_SHA1,
+             digest_method: XMLSecurity::Document::SHA256,
+             signature_method: XMLSecurity::Document::RSA_SHA256,
              embed_sign: false
 
       option :person_services_wsdl, nil
