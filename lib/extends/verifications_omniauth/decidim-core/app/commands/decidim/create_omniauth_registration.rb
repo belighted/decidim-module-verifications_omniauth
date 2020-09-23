@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require 'active_support/concern'
 
 module CreateOmniauthRegistrationExtend
   extend ActiveSupport::Concern
 
   included do
-
     def call
       verify_oauth_signature!
 
@@ -34,9 +34,7 @@ module CreateOmniauthRegistrationExtend
       rescue ActiveRecord::RecordInvalid => e
         broadcast(:error, e.record)
       end
-
     end
-
   end
 end
 

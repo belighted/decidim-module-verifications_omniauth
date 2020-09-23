@@ -6,7 +6,6 @@ module Decidim
       class BosaActionAuthorizer < Decidim::Verifications::DefaultActionAuthorizer
         # Overrides the parent class method, but it still uses it to keep the base behavior
         def authorize
-
           status_code, data = *super
           minimum_age = manifest&.minimum_age
 

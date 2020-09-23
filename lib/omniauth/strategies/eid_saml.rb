@@ -28,7 +28,7 @@ module OmniAuth
       # authentication_method: ['authenticationmethod'],
       # authentication_level: ['urn:be:fedict:iam:attr:authenticationmethod'],
       # authentication_context: ['urn:be:fedict:iam:attr:context']
-      option :idp_cert_fingerprint_validator, -> (fingerprint) { fingerprint }
+      option :idp_cert_fingerprint_validator, ->(fingerprint) { fingerprint }
       option :force_authn, true
       option :security,
              authn_requests_signed: true, # Enable or not signature on AuthNRequest

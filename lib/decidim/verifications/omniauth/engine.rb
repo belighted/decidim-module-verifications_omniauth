@@ -20,7 +20,6 @@ module Decidim
             require_dependency override
           end
         end
-
       end
     end
   end

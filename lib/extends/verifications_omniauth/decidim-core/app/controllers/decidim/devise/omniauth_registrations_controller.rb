@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require "active_support/concern"
 
 module OmniauthRegistrationsControllerExtend
   extend ActiveSupport::Concern
 
   included do
-
     prepend_before_action :manage_omniauth_authorization, except: [:logout]
 
     before_action :configure_permitted_parameters, except: [:logout]
@@ -170,6 +170,7 @@ module OmniauthRegistrationsControllerExtend
     # Since we are using trusted omniauth data we are generating a valid signature.
     def user_params_from_oauth_hash
       return nil if oauth_data.empty?
+
       {
         provider: oauth_data[:provider],
         uid: oauth_data[:uid],
@@ -202,7 +203,6 @@ module OmniauthRegistrationsControllerExtend
     def is_saml_callback?
       request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
     end
-
   end
 end
 

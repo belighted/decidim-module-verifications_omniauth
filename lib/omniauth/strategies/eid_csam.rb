@@ -116,12 +116,12 @@ module OmniAuth
 
           # Build a request to produce its xml
           request = ps_client.build_request(:get_person, message_tag: :getPersonRequest, message: {
-            "v1:userContext": {
-              "v1:personNumber": person_id,
-              "v1:language": 'en'
-            },
-            "v31:personNumber": person_id
-          })
+                                              "v1:userContext": {
+                                                "v1:personNumber": person_id,
+                                                "v1:language": 'en'
+                                              },
+                                              "v31:personNumber": person_id
+                                            })
           xml = request.body
           doc = Nokogiri::XML(xml)
 
