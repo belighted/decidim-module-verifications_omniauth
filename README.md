@@ -19,7 +19,9 @@ gem 'decidim-verifications_omniauth', git: 'git@github.com:belighted/decidim-mod
 And then execute:
 
 ```bash
-bundle install
+$ bundle install
+$ bundle exec rails decidim_term_customizer:install:migrations
+$ bundle exec raild db:migrate
 ```
 
 Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim.rb`
@@ -94,16 +96,16 @@ In the application's `config/secrets.yml` add following options in the omniauth 
       idp_key: ""
 ```
 
-You will need also to generate a private key together with a certificate that will be used for CSAM. 
+You will need also to generate a private key together with a certificate that will be used for CSAM.
 For SAML, depending on the configuration of the IDP, you might required a certificate too.
 You can find plenty of documentation on Internet on how to generate them. However, here is a shortcut using `openssl`.
 
 ```
 openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
   -keyout monopinion.key -out monopinion.crt -extensions san -config \
-  <(echo "[req]"; 
-    echo distinguished_name=req; 
-    echo "[san]"; 
+  <(echo "[req]";
+    echo distinguished_name=req;
+    echo "[san]";
     echo subjectAltName=DNS:[your_domain]
     ) \
   -subj "/CN=[your domain]"
@@ -111,7 +113,7 @@ openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
 
 ## Belgium: CSAM and Person Services
 
-If you have access to the API of person services, you can enrich the configuration of CSAM with them. 
+If you have access to the API of person services, you can enrich the configuration of CSAM with them.
 It will allow the application to fetch some personal data about the user to allow a better characterization of the person.
 It can be useful to have for instance, region/city-based features.
 
@@ -143,7 +145,10 @@ For each organization you have to set valid configuration options:
 Create a dummy app in the `spec` dir:
 
 ```bash
-DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password>  bundle exec rake decidim:generate_external_test_app
+$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password>  bundle exec rails decidim:generate_external_test_app
+$ cd spec/decidim_dummy_app
+$ bunde exec rails decidim_verifications_omniauth:install:migrations
+$ RAILS_ENV=test bundle exec rails db:migrate
 ```
 
 Apply changes to decidim_dummy_app and provide configuration mentioned in [How to](#how-to-install) section.
@@ -167,7 +172,40 @@ This will generate a folder named coverage in the project root which contains th
 
 ## Contributing
 
-See [Decidim](https://github.com/decidim/decidim).
+For instructions how to setup your development environment for Decidim, see [Decidim](https://github.com/decidim/decidim).
+Also follow Decidim's general instructions for development for this project as well.
+
+### Developing
+
+To start contributing to this project, first:
+
+    Install the basic dependencies (such as Ruby and PostgreSQL)
+    Clone this repository
+
+Decidim's main repository also provides a Docker configuration file if you prefer to use Docker instead of installing the dependencies locally on your machine.
+
+You can create the development app by running the following commands after cloning this project:
+
+```bash
+$ bundle
+$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rake development_app
+$ npm i
+```
+
+Note that the database user has to have rights to create and drop a database in order to create the dummy test app database.
+
+Then to test how the module works in Decidim, start the development server:
+
+```bash
+$ cd development_app
+$ bunde exec rails decidim_verifications_omniauth:install:migrations
+$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rails db:migrate
+$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rails s
+```
+
+In case you are using rbenv and have the rbenv-vars plugin installed for it,
+you can add the environment variables to the root directory of the project in a file named .rbenv-vars.
+If these are defined for the environment, you can omit defining these in the commands shown above.
 
 Core utils were extracted from the [OpenSourcePolitics/decidim](https://github.com/OpenSourcePolitics/decidim/tree/alt/petition_merge)
 as an extension, to provide functionality without forking the decidim.
