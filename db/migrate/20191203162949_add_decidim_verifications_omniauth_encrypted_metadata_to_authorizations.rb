@@ -1,3 +1,5 @@
+# frozen_string_literal: tru
+
 # This migration comes from decidim (originally 20191004194247)
 class AddDecidimVerificationsOmniauthEncryptedMetadataToAuthorizations < ActiveRecord::Migration[5.2]
   def change

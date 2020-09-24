@@ -14,7 +14,7 @@ module Decidim
           root to: "authorizations#new"
         end
 
-        initializer "extends" do |app|
+        initializer "extends" do
           Dir.glob("#{Decidim::Verifications::Omniauth::Engine.root}/lib/extends/verifications_omniauth/**/*.rb").each do |override|
             require_dependency override
           end

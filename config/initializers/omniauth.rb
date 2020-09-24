@@ -32,7 +32,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         person_services_key: :person_services_key,
         person_services_secret: :person_services_secret,
         person_services_proxy: :person_services_proxy,
-        person_services_fallback_rrn: :person_services_fallback_rrn,
+        person_services_fallback_rrn: :person_services_fallback_rrn
       )
     )
   end
@@ -60,7 +60,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         person_services_key: :person_services_key,
         person_services_secret: :person_services_secret,
         person_services_proxy: :person_services_proxy,
-        person_services_fallback_rrn: :person_services_fallback_rrn,
+        person_services_fallback_rrn: :person_services_fallback_rrn
       )
     )
   end

@@ -19,7 +19,7 @@ module Decidim
 
         def under_minimum_age?(minimum_age)
           authorization.metadata[:official_birth_date].present? &&
-            (((Time.zone.now - authorization.metadata[:official_birth_date].to_time) / 1.year.seconds).floor < minimum_age)
+            (((Time.zone.now - authorization.metadata[:official_birth_date].in_time_zone) / 1.year.seconds).floor < minimum_age)
         end
 
         def manifest

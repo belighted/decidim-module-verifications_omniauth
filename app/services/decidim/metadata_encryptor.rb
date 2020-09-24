@@ -6,7 +6,7 @@ module Decidim
     attr_reader :uid
 
     def initialize(args = {})
-      uid = args.fetch(:uid) || 'default'
+      uid = args.fetch(:uid) || "default"
       @key = ActiveSupport::KeyGenerator.new(uid).generate_key(
         Rails.application.secrets.secret_key_base,
         ActiveSupport::MessageEncryptor.key_len

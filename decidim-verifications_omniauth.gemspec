@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email = ["be@belighted.com"]
   s.license = "AGPL-3.0"
   s.homepage = "https://github.com/belighted/decidim-module-verifications_omniauth"
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 2.6"
 
   s.name = "decidim-verifications_omniauth"
   s.summary = "A decidim verifications_omniauth module"
@@ -20,9 +20,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency "decidim-core", Decidim::VerificationsOmniauth.version
   s.add_dependency "decidim-verifications", Decidim::VerificationsOmniauth.version
+  s.add_dependency "omniauth-saml", "~> 1.10"
   s.add_dependency "savon", "~> 2.12.0"
   s.add_dependency "signer"
-  s.add_dependency "omniauth-saml", "~> 1.10"
 
   s.add_development_dependency "decidim-dev", Decidim::VerificationsOmniauth.version
 end

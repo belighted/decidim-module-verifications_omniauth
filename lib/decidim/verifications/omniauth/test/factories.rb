@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :verifications_omniauth_authorization, parent: :authorization do
-    encrypted_metadata { '' }
+    encrypted_metadata { "" }
   end
 end

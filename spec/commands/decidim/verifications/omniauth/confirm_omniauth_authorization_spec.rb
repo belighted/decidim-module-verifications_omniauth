@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 describe Decidim::Verifications::Omniauth::ConfirmOmniauthAuthorization do
   subject { described_class.new(authorization, form, session) }
@@ -15,19 +15,19 @@ describe Decidim::Verifications::Omniauth::ConfirmOmniauthAuthorization do
     { "secret_code" => "XX42YY" }
   end
 
-  describe '#call' do
-    context 'when the form is not valid' do
+  describe "#call" do
+    context "when the form is not valid" do
       let(:form) do
         instance_double(Decidim::Verifications::Omniauth::OmniauthAuthorizationForm, valid?: false)
       end
 
-      it 'is not valid' do
+      it "is not valid" do
         expect { subject.call }.to broadcast(:invalid)
       end
     end
 
-    context 'when the form is valid' do
-      context 'when is not confirmed successfuly' do
+    context "when the form is valid" do
+      context "when is not confirmed successfuly" do
         let(:form) do
           instance_double(Decidim::Verifications::Omniauth::OmniauthAuthorizationForm,
                           valid?: true,
@@ -39,9 +39,9 @@ describe Decidim::Verifications::Omniauth::ConfirmOmniauthAuthorization do
         end
       end
 
-      context 'confirmed successfuly' do
+      context "when confirmed successfuly" do
         let(:metadata) do
-          { nickname: 'Lorem ipsum', first_name: 'Lorem', last_name: 'ipsum' }
+          { nickname: "Lorem ipsum", first_name: "Lorem", last_name: "ipsum" }
         end
         let(:form) do
           instance_double(Decidim::Verifications::Omniauth::OmniauthAuthorizationForm,

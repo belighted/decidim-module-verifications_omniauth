@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
+require "active_support/concern"
 
 module CreateOmniauthRegistrationExtend
   extend ActiveSupport::Concern
@@ -17,9 +17,7 @@ module CreateOmniauthRegistrationExtend
           return broadcast(:ok, user)
         end
 
-        if request.path.end_with?('saml/callback') || request.path.end_with?("csam/callback")
-          return broadcast(:error, user)
-        end
+        return broadcast(:error, user) if request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
 
         return broadcast(:invalid) if form.invalid?
 
