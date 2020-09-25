@@ -40,6 +40,7 @@ fr:
         errors:
           anti_affinity: "Vous ne pouvez pas être connecter avec ces 2 identités en même temps: %{anti_affinity}"
           minimum_age: "Vous devez avoir au moins %{minimum_age} pour confirmer votre compte."
+          identity: "must be connected to you account"
         admin:
           authorizations:
             index:

@@ -33,7 +33,10 @@ module Decidim
         end
 
         def has_identity?
-          identity_for_user&.present?
+          return true if identity_for_user.present?
+
+          errors.add(:identity, I18n.t("decidim.verifications.omniauth.errors.identity"), locale: user.locale)
+          false
         end
 
         def check_anti_affinity?

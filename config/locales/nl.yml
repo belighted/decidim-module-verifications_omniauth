@@ -40,6 +40,7 @@ en:
         errors:
           anti_affinity: "You can't be connected with these identities at the same time : %{anti_affinity}"
           minimum_age: "You must be at least %{minimum_age} to validate your account."
+          identity: "must be connected to you account"
         admin:
           authorizations:
             index:
