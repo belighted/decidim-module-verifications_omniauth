@@ -10,7 +10,7 @@ module Decidim
           if confirmation_successful?
             authorization.attributes = {
               unique_id: form.unique_id,
-              encrypted_metadata: Decidim::MetadataEncryptor.new(
+              encrypted_metadata: MetadataEncryptor.new(
                 uid: form.unique_id
               ).encrypt(form.metadata.reject { |k, _v| k == :nickname })
             }

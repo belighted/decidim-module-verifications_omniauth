@@ -14,7 +14,7 @@ module AuthorizationExtend
 
       authorization.attributes = {
         unique_id: handler.unique_id,
-        encrypted_metadata: Decidim::MetadataEncryptor.new(
+        encrypted_metadata: Decidim::Verifications::Omniauth::MetadataEncryptor.new(
           uid: handler.unique_id
         ).encrypt(handler.metadata)
       }
@@ -33,7 +33,7 @@ module AuthorizationExtend
     private
 
     def encryptor
-      @encryptor ||= Decidim::MetadataEncryptor.new(uid: unique_id)
+      @encryptor ||= Decidim::Verifications::Omniauth::MetadataEncryptor.new(uid: unique_id)
     end
   end
 end
