@@ -11,7 +11,6 @@ SimpleCov.start do
   add_group "Forms", "app/forms"
   add_group "Services", "app/services"
   add_group "Decidim Extensions", "lib/extends"
-  add_group "Omniauth", "lib/omniauth"
 end
 
 SimpleCov.command_name ENV["COMMAND_NAME"] || File.basename(Dir.pwd)
