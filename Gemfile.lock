@@ -331,6 +331,10 @@ GEM
     crass (1.0.6)
     css_parser (1.7.1)
       addressable
+    database_cleaner (1.8.5)
+    database_cleaner-active_record (1.8.0)
+      activerecord
+      database_cleaner (~> 1.8.0)
     date_validator (0.9.0)
       activemodel
       activesupport
@@ -796,6 +800,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   byebug (~> 11.0)
+  database_cleaner-active_record
   decidim!
   decidim-dev!
   decidim-verifications_omniauth!

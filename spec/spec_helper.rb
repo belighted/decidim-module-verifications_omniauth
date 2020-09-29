@@ -13,6 +13,9 @@ Decidim::Dev.dummy_app_path = File.expand_path(File.join("spec", "decidim_dummy_
 
 require "decidim/dev/test/base_spec_helper"
 
+require "database_cleaner/active_record"
+DatabaseCleaner.strategy = :truncation
+
 RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Decidim::WardenTestHelpers, type: :request
@@ -24,5 +27,9 @@ RSpec.configure do |config|
 
   config.after :each, type: :request do
     Warden.test_reset!
+  end
+
+  config.after(:suite) do
+    DatabaseCleaner.clean
   end
 end
