@@ -20,8 +20,8 @@ And then execute:
 
 ```bash
 $ bundle install
-$ bundle exec rails decidim_term_customizer:install:migrations
-$ bundle exec raild db:migrate
+$ bundle exec rails decidim_verifications_omniauth:install:migrations
+$ bundle exec rails db:migrate
 ```
 
 Add setup for new verifications workflow in the initializer e.g `{APP}/config/initializers/decidim.rb`
@@ -75,7 +75,8 @@ en:
             - Validate with a CSAM eID account
 ```
 
-You can also specify the default value fo parameters in your Decidim app for the bootstrap. Once saved, only the values present in the database will be used. 
+You can also specify the default value fo parameters in your Decidim app for the bootstrap.
+Once saved, only the values present in the database will be used.
 In the application's `config/secrets.yml` add following options in the omniauth section:
 
 ```yaml
@@ -147,7 +148,7 @@ Create a dummy app in the `spec` dir:
 ```bash
 $ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password>  bundle exec rails decidim:generate_external_test_app
 $ cd spec/decidim_dummy_app
-$ bunde exec rails decidim_verifications_omniauth:install:migrations
+$ bundle exec rails decidim_verifications_omniauth:install:migrations
 $ RAILS_ENV=test bundle exec rails db:migrate
 ```
 
@@ -188,8 +189,7 @@ You can create the development app by running the following commands after cloni
 
 ```bash
 $ bundle
-$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rake development_app
-$ npm i
+$ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec be rails decidim:generate_external_development_app
 ```
 
 Note that the database user has to have rights to create and drop a database in order to create the dummy test app database.
@@ -198,7 +198,7 @@ Then to test how the module works in Decidim, start the development server:
 
 ```bash
 $ cd development_app
-$ bunde exec rails decidim_verifications_omniauth:install:migrations
+$ bundle exec rails decidim_verifications_omniauth:install:migrations
 $ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rails db:migrate
 $ DATABASE_USERNAME=<username> DATABASE_PASSWORD=<password> bundle exec rails s
 ```

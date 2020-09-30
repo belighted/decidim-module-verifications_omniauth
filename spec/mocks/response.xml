@@ -1,0 +1,87 @@
+<soapenv:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header>
+    <head:fsbHeader xmlns:head="http://fsb.belgium.be/header" xmlns:v31="http://fsb.belgium.be/getPersonService/messages/v3_00" xmlns:v1="http://fsb.belgium.be/data/business/context/v1_00" xmlns:v3="http://fsb.belgium.be/getPersonService/v3_00">
+      <head:messageId>localhost</head:messageId>
+      <head:fsbTransactionId>Xu@KMNoF8A5pUPv6EPxo5wAAAIY</head:fsbTransactionId>
+    </head:fsbHeader>
+    <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsu:Timestamp wsu:Id="Timestamp-0yc3E0F2B9evp0sX5PGsHQ22" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsu:Created>2020-06-21T16:26:25Z</wsu:Created>
+        <wsu:Expires>2020-06-21T16:31:25Z</wsu:Expires>
+      </wsu:Timestamp>
+      <wsse:BinarySecurityToken
+        ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
+        EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+        wsu:Id="BST-gflOXy04sQJUu8zKIG05fg22"
+        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">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</wsse:BinarySecurityToken>
+      <dsig:Signature xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+        <dsig:SignedInfo>
+          <dsig:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+          <dsig:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+          <dsig:Reference URI="#Timestamp-0yc3E0F2B9evp0sX5PGsHQ22">
+            <dsig:Transforms>
+              <dsig:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </dsig:Transforms>
+            <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+            <dsig:DigestValue>icx6zSfKdyzrbkn2YNBxBTDv7hM=</dsig:DigestValue>
+          </dsig:Reference>
+          <dsig:Reference URI="#Body-wo1AWH1ETKRSZOE1hn2sSA22">
+            <dsig:Transforms>
+              <dsig:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </dsig:Transforms>
+            <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+            <dsig:DigestValue>x9TPysYpXiqfv1MNR+flWEphmkk=</dsig:DigestValue>
+          </dsig:Reference>
+        </dsig:SignedInfo>
+        <dsig:SignatureValue>nwQ1lf9FuQYK8j5xwUYC0LNgXpUSiGJQ09r+H/eRdDltO5M2Zga341G5tfASotH5amA1s3QWDGiDN2qklU/nqna2UfWnsLA5woR9nAPvV7QdtmMKjamYfRfHwOVxWpzYTE89yn07W5FPNJi+OXdaCgboKHRhGoeiwlscfQY4FWIT/2RsC6kWeZNdPNl+cpELMmWoVCOXNyBkKdB0I8zBjzkiyoLphByHSgLkptTceZmDjZVTtP6XlOhLI9u8ccfbCy/0lRl/KQl+LBVxiIzbtpy1hwuPpDpoGd6g/mxn63jJaRjgwX97TJLvzGQhcR46HsN6V+G+1fHDPawMflCynBOVhAdlnWeB42Wvwf9/MQQRcwZ9651WLxgUjQAmUhyIHVtu7ior5jOVxUVsLjtPY6zIDXikSJwmC+3W5DoMNgpXm644KDOkLrucbN6u6v39DwA09F+J3dyHIj6orNh1RDuum2vPW/rVmP7Ky/21uLJMc4DS2N+WC02uGGmE4zFhNWGhDoiC/eRO4dxu5sCbGvfhn6H2G3SJoOgCwe6UfnpuXdqygDR07pVguQkG7l6wa+3Ri7J8cj6vOXmOibs+ff2qUa2jVXW6l0n6OKV6c9nfj1G+XgoUM07te04mjeHPfDQtlPezmO0hxEEGzqbp6pVoXElWbkqJtTHHXbWu/V0=</dsig:SignatureValue>
+        <dsig:KeyInfo Id="KeyInfo-DfGcuRHeagyASJkiH5LtsA22">
+          <wsse:SecurityTokenReference>
+            <wsse:Reference URI="#BST-gflOXy04sQJUu8zKIG05fg22" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+          </wsse:SecurityTokenReference>
+        </dsig:KeyInfo>
+      </dsig:Signature>
+    </wsse:Security>
+  </soapenv:Header>
+  <soapenv:Body wsu:Id="Body-wo1AWH1ETKRSZOE1hn2sSA22" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <v3:getPersonResponse xmlns:v3="http://fsb.belgium.be/getPersonService/messages/v3_00">
+      <v2:basicNaturalPerson xmlns:v2="http://fsb.belgium.be/data/business/person/v2_00">
+        <v2:state>ALIVE</v2:state>
+        <v21:basicPerson trust="AUTHENTIC_SOURCE" source="RN/RR" xmlns:v21="http://fsb.belgium.be/data/entity/person/v2_00">
+          <v21:personNumber>74070624514</v21:personNumber>
+          <v21:name>
+            <v1:firstName xmlns:v1="http://fsb.belgium.be/data/entity/person/name/v1_00">Bart</v1:firstName>
+            <v1:firstName xmlns:v1="http://fsb.belgium.be/data/entity/person/name/v1_00">Ernest</v1:firstName>
+            <v1:firstName xmlns:v1="http://fsb.belgium.be/data/entity/person/name/v1_00">Germain</v1:firstName>
+            <v1:lastName xmlns:v1="http://fsb.belgium.be/data/entity/person/name/v1_00">Declercq</v1:lastName>
+          </v21:name>
+          <v21:gender>
+            <v1:code xmlns:v1="http://fsb.belgium.be/data/common/code/v1_00">1</v1:code>
+          </v21:gender>
+          <v21:officialBirthDate>
+            <v22:century xmlns:v22="http://fsb.belgium.be/data/common/date/v2_00">19</v22:century>
+            <v22:year xmlns:v22="http://fsb.belgium.be/data/common/date/v2_00">74</v22:year>
+            <v22:month xmlns:v22="http://fsb.belgium.be/data/common/date/v2_00">07</v22:month>
+            <v22:day xmlns:v22="http://fsb.belgium.be/data/common/date/v2_00">06</v22:day>
+          </v21:officialBirthDate>
+        </v21:basicPerson>
+        <v1:address xmlns:v1="http://fsb.belgium.be/data/entity/address/v1_00">
+          <v1:structuredAddress trust="AUTHENTIC_SOURCE" source="RN/RR">
+            <v1:country>
+              <v11:code xmlns:v11="http://fsb.belgium.be/data/common/code/v1_00">BE</v11:code>
+            </v1:country>
+            <v1:street>
+              <v11:code xmlns:v11="http://fsb.belgium.be/data/common/code/v1_00">2645</v11:code>
+              <v11:description xmlns:v11="http://fsb.belgium.be/data/common/code/v1_00">Vondelen(DE)</v11:description>
+            </v1:street>
+            <v1:houseNumber>33</v1:houseNumber>
+            <v1:postCode>9450</v1:postCode>
+            <v1:municipality>
+              <v11:code xmlns:v11="http://fsb.belgium.be/data/common/code/v1_00">41024</v11:code>
+              <v11:description xmlns:v11="http://fsb.belgium.be/data/common/code/v1_00">Haaltert</v11:description>
+            </v1:municipality>
+          </v1:structuredAddress>
+        </v1:address>
+      </v2:basicNaturalPerson>
+    </v3:getPersonResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

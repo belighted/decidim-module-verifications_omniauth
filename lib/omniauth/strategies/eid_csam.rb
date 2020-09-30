@@ -3,7 +3,7 @@
 require "omniauth-saml"
 require "savon"
 require "akami"
-require "onelogin/ruby-saml/utils"
+require "omniauth/saml/services/get_person"
 
 module OmniAuth
   module Strategies
@@ -89,19 +89,21 @@ module OmniAuth
       def handle_response(raw_response, opts, settings)
         super(raw_response, opts, settings) do
           if @response_object.success?
+            person_id = find_attribute_by(options.attribute_statements["rrn"])
+            get_person_options = options.merge(settings: settings)
+
             begin
-              @person_services_response = person_services_request(options.merge(settings: settings), find_attribute_by(options.attribute_statements["rrn"]))
+              @person_services_response = OmniAuth::SAML::Services::GetPerson.new(person_id: person_id, opts: get_person_options).call
               if @person_services_response.present? && @person_services_response.dig(:"v3:get_person_response", :"v1:error").present?
                 Rails.logger.error @person_services_response
-                # @person_services_response = nil
                 if options[:person_services_fallback_rrn].present?
-                  @person_services_response = person_services_request(options.merge(settings: settings), options[:person_services_fallback_rrn])
+                  @person_services_response = OmniAuth::SAML::Services::GetPerson.new(person_id: options[:person_services_fallback_rrn], opts: get_person_options).call
                 end
               end
             rescue Savon::SOAPFault => e
               Rails.logger.error e.to_hash
               if options[:person_services_fallback_rrn].present?
-                @person_services_response = person_services_request(options.merge(settings: settings), options[:person_services_fallback_rrn])
+                @person_services_response = OmniAuth::SAML::Services::GetPerson.new(person_id: options[:person_services_fallback_rrn], opts: get_person_options).call
               end
             rescue Savon::HTTPError => e
               Rails.logger.error e.to_hash
@@ -117,75 +119,6 @@ module OmniAuth
 
           @response_object = nil
           yield
-        end
-      end
-
-      def person_services_request(opts, person_id)
-        cert_file = opts[:person_services_cert]
-        ca_cert_file = opts[:person_services_cert]
-        key_file = opts[:person_services_key]
-        password = opts[:person_services_secret]
-
-        ps_client = Savon.client(
-          wsdl: opts[:person_services_wsdl],
-          proxy: opts[:person_services_proxy],
-
-          log: true,
-          logger: Logger.new(STDOUT),
-          pretty_print_xml: false,
-
-          namespace_identifier: :v31,
-          env_namespace: :soapenv,
-          namespaces: {
-            "xmlns:head" => "http://fsb.belgium.be/header",
-            "xmlns:v1" => "http://fsb.belgium.be/data/business/context/v1_00",
-            "xmlns:v3" => "http://fsb.belgium.be/getPersonService/v3_00",
-            "xmlns:v31" => "http://fsb.belgium.be/getPersonService/messages/v3_00"
-          },
-          strip_namespaces: false,
-
-          soap_header: {
-            "head:fsbHeader" => {
-              "head:messageId" => SecureRandom.uuid
-            }
-          },
-          wsse_timestamp: true
-        )
-
-        if ps_client.operations.include?(:get_person)
-
-          # Build a request to produce its xml
-          request = ps_client.build_request(:get_person, message_tag: :getPersonRequest, message: {
-                                              "v1:userContext": {
-                                                "v1:personNumber": person_id,
-                                                "v1:language": "en"
-                                              },
-                                              "v31:personNumber": person_id
-                                            })
-          xml = request.body
-          doc = Nokogiri::XML(xml)
-
-          # Sign xml using Signer
-          signer = Signer.new(doc.to_xml(encoding: "UTF-8", indent: 0))
-          signer.cert = OpenSSL::X509::Certificate.new(OneLogin::RubySaml::Utils.format_cert(cert_file + ca_cert_file))
-          signer.private_key = OpenSSL::PKey::RSA.new(OneLogin::RubySaml::Utils.format_private_key(key_file), password)
-          signer.ds_namespace_prefix = "ds"
-
-          signer.document.xpath("//soapenv:Body").each do |node|
-            signer.digest!(node, inclusive_namespaces: %w(head soapenv v1 v3 v31 xsd xsi))
-          end
-          signer.document.xpath("//u:Timestamp", "u" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd").each do |node|
-            signer.digest!(node, inclusive_namespaces: %w(wsse head soapenv v1 v3 v31 xsd xsi))
-          end
-
-          signer.sign!(security_token: true, inclusive_namespaces: %w(head soapenv v1 v3 v31 xsd xsi))
-          signed_xml = signer.to_xml
-
-          # Making an actual call to API
-          response = ps_client.call(:get_person, message_tag: :getPersonRequest, xml: signed_xml)
-
-          # Handle the response
-          return response.body
         end
       end
 
