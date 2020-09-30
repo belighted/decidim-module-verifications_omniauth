@@ -20,6 +20,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Decidim::WardenTestHelpers, type: :request
   config.include Rails.application.routes.url_helpers, type: :request
+  config.include Rails.application.routes.mounted_helpers, type: :request
 
   config.before :each, type: :request do
     Warden.test_mode!

@@ -2,13 +2,13 @@
 
 require "spec_helper"
 
-describe "CSAM omniauth workflow", type: :request do
+describe "Authorizations", type: :request do
   let(:user) { create(:user) }
 
   before { sign_in user, scope: :user }
 
-  describe "new authorization" do
-    before { get "/csam", headers: { host: user.organization.host } }
+  describe "#new" do
+    before { get decidim_csam.root_path, headers: { host: user.organization.host } }
 
     it { is_expected.to redirect_to("/users/auth/csam") }
   end

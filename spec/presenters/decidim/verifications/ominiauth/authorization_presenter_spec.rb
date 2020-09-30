@@ -2,6 +2,7 @@
 
 require "spec_helper"
 
+# rubocop:disable RSpec/FilePath
 describe Decidim::Verifications::Omniauth::AuthorizationPresenter do
   let(:presenter) { described_class.new(authorization) }
 
@@ -21,3 +22,4 @@ describe Decidim::Verifications::Omniauth::AuthorizationPresenter do
     end
   end
 end
+# rubocop:enable RSpec/FilePath

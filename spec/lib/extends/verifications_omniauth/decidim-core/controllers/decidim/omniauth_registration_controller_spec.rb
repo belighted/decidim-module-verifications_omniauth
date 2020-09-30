@@ -2,6 +2,7 @@
 
 require "spec_helper"
 
+# rubocop:disable RSpec/FilePath
 describe Decidim::Devise::OmniauthRegistrationsController, type: :controller do
   routes { Decidim::Core::Engine.routes }
 
@@ -102,3 +103,4 @@ describe Decidim::Devise::OmniauthRegistrationsController, type: :controller do
     end
   end
 end
+# rubocop:enable RSpec/FilePath
