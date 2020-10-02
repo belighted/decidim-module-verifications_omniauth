@@ -83,6 +83,16 @@ In the application's `config/secrets.yml` add following options in the omniauth 
   omniauth:
     saml:
       enabled: true
+      provider_name:                  [name of the application on IDP side]
+      icon_path:                      [name of the icon]
+      idp_sso_target_url:             [URL oof IDP for sign-in]
+      assertion_consumer_service_url: "https:/[your domain]/users/auth/saml/callback"
+      authn_context:                  [level of authentication, e.g. "urn:be:fedict:iam:fas:enterprise:Level300"]
+      issuer:                         "https://[your domain]/users/auth/saml/metadata"
+      protocol_binding:               "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+      idp_slo_target_url:             "https://[your domain]/users/auth/saml/spslo"
+      idp_cert:                       [Certificate]
+      idp_key:                        [Private key]
     csam:
       enabled: true
       provider_name:                  [name of the application on IDP side]
@@ -95,14 +105,25 @@ In the application's `config/secrets.yml` add following options in the omniauth 
       idp_slo_target_url:             "https://[your domain]/users/auth/csam/spslo"
       idp_cert: ""
       idp_key: ""
+      person_services_wsdl:           [Description for the Web Service]
+      person_services_cert:           [Certificate]
+      person_services_ca_cert:        []
+      person_services_key:            [Private key]
+      person_services_secret:         [Password to private key]
+      person_services_proxy:          [Web service endpoint]
+      person_services_fallback_rrn:   []
 ```
 
 You will need also to generate a private key together with a certificate that will be used for CSAM.
 For SAML, depending on the configuration of the IDP, you might required a certificate too.
 You can find plenty of documentation on Internet on how to generate them. However, here is a shortcut using `openssl`.
 
-```
-openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+```bash
+$ openssl genrsa -des3 -passout pass:[your_password] -out server.pass.key 2048
+$ openssl rsa -passin pass:[your_password] -in server.pass.key -out server.key
+$ rm server.pass.key
+$ openssl req -new -key server.key -out server.csr
+$ openssl req -x509 -newkey rsa:4096 -in server.csr -sha256 -days 3650 -nodes \
   -keyout monopinion.key -out monopinion.crt -extensions san -config \
   <(echo "[req]";
     echo distinguished_name=req;
@@ -111,7 +132,6 @@ openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
     ) \
   -subj "/CN=[your domain]"
 ```
-
 ## Belgium: CSAM and Person Services
 
 If you have access to the API of person services, you can enrich the configuration of CSAM with them.
