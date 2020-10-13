@@ -11,6 +11,9 @@ module Decidim
         def new
           # TODO : create abstract route for omniauth actions
           # TODO : validate action BEFORE launch the OmniAuth process
+          #
+          # ACHTUNG: This redirect_to just doesn't work with the way how omniauth strategy handles the request
+          #
           store_location_for(:user, request.fullpath)
           store_location_for(:redirect, redirect_url)
           redirect_to decidim.send("user_#{provider}_omniauth_authorize_path")
