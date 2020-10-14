@@ -52,7 +52,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         issuer: :issuer,
         authn_context: :authn_context,
         assertion_consumer_service_url: :assertion_consumer_service_url,
-        protocol_binding: :protocol_binding,
         idp_sso_target_url: :idp_sso_target_url,
         idp_slo_target_url: :idp_slo_target_url,
         person_services_wsdl: :person_services_wsdl,

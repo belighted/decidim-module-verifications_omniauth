@@ -85,7 +85,6 @@ en:
             idp_cert_fingerprint: Certificate fingerprint
             idp_cert: Certificate
             idp_key: Certificate private key
-            protocol_binding: Protocol binding
             person_services_wsdl: Person Services WSDL URL
             person_services_cert: Person Services Certificate
             person_services_ca_cert: Person Services CA Certificate

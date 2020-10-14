@@ -89,7 +89,6 @@ In the application's `config/secrets.yml` add following options in the omniauth 
       assertion_consumer_service_url: "https:/[your domain]/users/auth/saml/callback"
       authn_context:                  [level of authentication, e.g. "urn:be:fedict:iam:fas:enterprise:Level300"]
       issuer:                         "https://[your domain]/users/auth/saml/metadata"
-      protocol_binding:               "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
       idp_slo_target_url:             "https://[your domain]/users/auth/saml/spslo"
       idp_cert:                       [Certificate]
       idp_key:                        [Private key]
@@ -101,7 +100,6 @@ In the application's `config/secrets.yml` add following options in the omniauth 
       assertion_consumer_service_url: "https:/[your domain]/users/auth/csam/callback"
       authn_context:                  [level of authentication, e.g. "urn:be:fedict:iam:fas:enterprise:Level300"]
       issuer:                         "https://[your domain]/users/auth/csam/metadata"
-      protocol_binding:               "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
       idp_slo_target_url:             "https://[your domain]/users/auth/csam/spslo"
       idp_cert: ""
       idp_key: ""
