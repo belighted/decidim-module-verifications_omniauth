@@ -3,7 +3,7 @@
 module Decidim
   module VerificationsOmniauth
     def self.version
-      "0.22.0.rc1"
+      "0.22.0"
     end
   end
 end
