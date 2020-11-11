@@ -9,7 +9,7 @@ describe "Admin::Authorizations", type: :request do
 
   describe "#index" do
     before do
-      pending
+      # pending
       get decidim_admin_csam.root_path, headers: { host: user.organization.host }
     end
 

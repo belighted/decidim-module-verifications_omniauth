@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-DECIDIM_VERSION = '0.22.0' #{ git: "https://github.com/decidim/decidim", tag: "v0.22.0.rc1" }.freeze
+DECIDIM_VERSION = '0.22.0'
 
 gem "decidim", DECIDIM_VERSION
 gem "decidim-verifications_omniauth", path: "."
