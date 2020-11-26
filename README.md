@@ -64,15 +64,15 @@ en:
         name: CSAM
         explanation: Validate with your CSAM account
       saml:
-        name: CSAM eID
-        explanation: Validate with your CSAM eID account
+        name: SAML
+        explanation: Validate with your SAML account
       admin:
         csam:
           help:
             - Validate with a CSAM account
         saml:
           help:
-            - Validate with a CSAM eID account
+            - Validate with a SAML account
 ```
 
 You can also specify the default value fo parameters in your Decidim app for the bootstrap.

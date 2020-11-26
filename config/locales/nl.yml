@@ -7,14 +7,14 @@ en:
           - Confirmer avec un compte OmniAuth externe
         saml:
           help:
-            - Validate with a CSAM eID account
+            - Validate with a SAML account
         csam:
           help:
             - Validate with a CSAM account
 
       saml:
-        name: CSAM eID
-        explanation: Validate with your CSAM eID account
+        name: SAML
+        explanation: Validate with your SAML account
       csam:
         name: CSAM
         explanation: Validate with your CSAM account
@@ -27,7 +27,7 @@ en:
       authorizations:
         first_login:
           actions:
-            saml: Validate with your CSAM eID account
+            saml: Validate with your SAML account
             csam: Validate with your CSAM account
       metadata:
         content:
