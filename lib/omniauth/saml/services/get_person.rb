@@ -14,7 +14,7 @@ module OmniAuth
 
         def initialize(person_id:, opts:)
           @person_id = person_id
-          @opts = opts
+          @opts = (opts || {}).with_indifferent_access
         end
 
         def call
@@ -24,7 +24,7 @@ module OmniAuth
         def client
           @client ||= Savon.client(
             wsdl: opts[:person_services_wsdl],
-            proxy: opts[:person_services_proxy],
+            proxy: opts[:person_services_proxy].blank? ? nil : opts[:person_services_proxy].blank?,
 
             log: true,
             logger: Logger.new(STDOUT),
