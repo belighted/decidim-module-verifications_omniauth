@@ -19,6 +19,10 @@ module Decidim
             require_dependency override
           end
         end
+
+        initializer "MongoDB" do
+          Mongoid.load!(File.path("#{Decidim::Verifications::Omniauth::Engine.root}/config/mongoid.yml"))
+        end
       end
     end
   end

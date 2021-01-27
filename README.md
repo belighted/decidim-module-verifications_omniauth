@@ -136,6 +136,25 @@ If you have access to the API of person services, you can enrich the configurati
 It will allow the application to fetch some personal data about the user to allow a better characterization of the person.
 It can be useful to have for instance, region/city-based features.
 
+### Comply with BOSA FAS audit trail
+> Compliance stipulates:
+> 
+> Dans le cadre d’un audit trail, l’utilisateur doit pouvoir livrer un SAML fourni par BOSA DG TD, le messageID, le timestamp et l’utilisateur final y afférent, initiateur de la demande. Ces données doivent rester disponibles pendant une période de 10 ans et l'intégrateur technique veille à ce que cette exigence soit possible d'un point de vue technique.
+
+This history trail of GetPerson service requests stored in MongoDB.
+
+Check `app/models/get_person_request_history.rb` and `lib/omniauth/saml/services/get_person.rb:59` for how it is used.
+
+To configure MongoDB:
+1. install MongoDB: https://docs.mongodb.com/manual/administration/install-community/
+2. there is a `mongoid` gem to connect to db from Rails, make sure you run `bundle` to install it
+3. check the `config/mongoid.yml` file for configuration
+4. for non-development environments - configure the database name, host, port via ENV variables if needed:
+  - MONGO_DATABASE_NAME
+  - MONGO_DATABASE_HOST
+  - MONGO_DATABASE_PORT
+
+
 ## Usage
 
 As a system admin you can enable a new authorization strategies for organization in the following steps:

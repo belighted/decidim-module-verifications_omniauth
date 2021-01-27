@@ -53,9 +53,14 @@ module OmniAuth
 
         def make_request
           build_request
-            .then { |request| sign_request_body(request) }
-            .then { |signed_xml| client.call(:get_person, message_tag: :getPersonRequest, xml: signed_xml) }
-            .then(&:body)
+            .then {|request| sign_request_body(request)}
+            .then {|signed_xml| client.call(:get_person, message_tag: :getPersonRequest, xml: signed_xml)}
+            .then do |response|
+            if Mongoid.default_client.database_names.present?
+              GetPersonRequestHistory.create(person_id: person_id, response: response)
+            end
+            response.body
+          end
         end
 
         def build_request

@@ -10,8 +10,10 @@ gem "decidim", DECIDIM_VERSION
 gem "decidim-verifications_omniauth", path: "."
 
 gem "bootsnap"
-gem "puma"
+gem "puma", ">= 4.3.3"
 gem "uglifier", "~> 4.1"
+
+gem 'mongoid', '~> 7.2.0'
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
