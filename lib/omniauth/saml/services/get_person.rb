@@ -57,7 +57,7 @@ module OmniAuth
             .then {|signed_xml| client.call(:get_person, message_tag: :getPersonRequest, xml: signed_xml)}
             .then do |response|
             if Mongoid.default_client.database_names.present?
-              GetPersonRequestHistory.create(person_id: person_id, response: response)
+              GetPersonRequestHistory.create(person_id: person_id, response: response.body) rescue nil
             end
             response.body
           end
