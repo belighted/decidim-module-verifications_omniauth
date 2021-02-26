@@ -12,7 +12,7 @@ module Decidim
               unique_id: form.unique_id,
               encrypted_metadata: MetadataEncryptor.new(
                 uid: form.unique_id
-              ).encrypt(form.metadata.reject { |k, _v| k == :nickname })
+              ).encrypt(form.metadata.reject { |k, _v| k == :nickname || k == :rrn })
             }
 
             authorization.grant!
