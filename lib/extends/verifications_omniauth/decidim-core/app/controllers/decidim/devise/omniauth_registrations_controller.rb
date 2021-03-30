@@ -43,6 +43,13 @@ module OmniauthRegistrationsControllerExtend
           render :new
         end
 
+        on(:confirm) do |user|
+          session[:oauth_hash] = oauth_hash if oauth_hash.present?
+          sign_in user
+          set_flash_message :notice, :success, kind: provider_name(@form.provider)
+          render :new
+        end
+
         on(:error) do |user|
           session[:oauth_hash] = oauth_hash if oauth_hash.present?
 
@@ -82,17 +89,6 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def manage_omniauth_authorization
-      # Rails.logger.debug "+++++++++++++++++++++++++"
-      # Rails.logger.debug "OmniauthRegistrationsController.manage_omniauth_authorization"
-      # Rails.logger.debug params
-      # Rails.logger.debug "with current_user" if current_user
-      # Rails.logger.debug "location_for :user --> " + store_location_for(:user, stored_location_for(:user)).to_s
-      # Rails.logger.debug "location_for :redirect --> " + store_location_for(:redirect, stored_location_for(:redirect)).to_s
-      # Rails.logger.debug "match : " + ( !!store_location_for(:user, stored_location_for(:user)).match(/^\/#{params[:action]}\/$/) ).inspect
-      # Rails.logger.debug "omniauth_origin --> " + request.env["omniauth.origin"].split("?").first.to_s if request.env["omniauth.origin"].present?
-      # Rails.logger.debug "new_user_session_url --> " + decidim.new_user_session_path.split("?").first.to_s
-      # Rails.logger.debug "+++++++++++++++++++++++++"
-
       location = store_location_for(:user, stored_location_for(:user))
       return unless location.present? && location.match(%r{^/#{params[:action]}/$}).present?
 
@@ -106,11 +102,13 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def grant_omniauth_authorization
-      Rails.logger.debug "+++++++++++++++++++++++++"
-      Rails.logger.debug "OmniauthRegistrationsController.grant_omniauth_authorization"
-      Rails.logger.debug params
-      Rails.logger.debug oauth_data.to_json if oauth_data
-      Rails.logger.debug "+++++++++++++++++++++++++"
+      if Rails.env.development?
+        Rails.logger.debug "+++++++++++++++++++++++++"
+        Rails.logger.debug "OmniauthRegistrationsController.grant_omniauth_authorization"
+        Rails.logger.debug params
+        Rails.logger.debug oauth_data.to_json if oauth_data
+        Rails.logger.debug "+++++++++++++++++++++++++"
+      end
 
       return unless Decidim.authorization_workflows.any? { |a| a.try(:omniauth_provider).to_s == oauth_data[:provider].to_s }
 
@@ -179,7 +177,8 @@ module OmniauthRegistrationsControllerExtend
         email: oauth_data[:info][:email],
         oauth_signature: Decidim::OmniauthRegistrationForm.create_signature(oauth_data[:provider], oauth_data[:uid]),
         avatar_url: oauth_data[:info][:image],
-        raw_data: oauth_hash
+        raw_data: session['oauth_hash'] || oauth_hash,
+        step: "step1"
       }
     end
 

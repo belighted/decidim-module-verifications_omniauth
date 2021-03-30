@@ -4,16 +4,16 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-DECIDIM_VERSION = '0.22.0'
+DECIDIM_VERSION = "0.22.0"
 
 gem "decidim", DECIDIM_VERSION
 gem "decidim-verifications_omniauth", path: "."
 
 gem "bootsnap"
+gem "mongoid", "~> 7.2.0"
 gem "puma", ">= 4.3.3"
 gem "uglifier", "~> 4.1"
-
-gem 'mongoid', '~> 7.2.0'
+gem "valid_email2", "~> 2.1"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
