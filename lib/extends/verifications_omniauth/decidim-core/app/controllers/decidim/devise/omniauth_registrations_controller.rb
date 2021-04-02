@@ -6,13 +6,13 @@ module OmniauthRegistrationsControllerExtend
   extend ActiveSupport::Concern
 
   included do
-    prepend_before_action :manage_omniauth_authorization, except: [:logout]
+    skip_before_action :verify_authenticity_token, if: :saml_callback?
+
+    before_action :manage_omniauth_authorization, except: [:logout]
 
     before_action :configure_permitted_parameters, except: [:logout]
 
     after_action :grant_omniauth_authorization, except: [:logout]
-
-    skip_before_action :verify_authenticity_token, if: :saml_callback?
 
     def new
       @form = form(Decidim::OmniauthRegistrationForm).from_params(user_params)
@@ -92,8 +92,22 @@ module OmniauthRegistrationsControllerExtend
       # Rails.logger.debug "omniauth_origin --> " + request.env["omniauth.origin"].split("?").first.to_s if request.env["omniauth.origin"].present?
       # Rails.logger.debug "new_user_session_url --> " + decidim.new_user_session_path.split("?").first.to_s
       # Rails.logger.debug "+++++++++++++++++++++++++"
+      redirect_url = request.env.dig("omniauth.params", "redirect_url") || request.env.dig("omniauth.origin")
 
-      location = store_location_for(:user, stored_location_for(:user))
+      location = if redirect_url.present? && safe_redirect?(redirect_url)
+                   store_location_for(:user, redirect_url)
+                 else
+                   store_location_for(:user, stored_location_for(:user))
+                 end
+
+      Rails.logger.info "+" * 30
+      Rails.logger.info "omniauth.origin: #{request.env.dig("omniauth.origin")}"
+      Rails.logger.info "omniauth.params: #{request.env.dig("omniauth.params")}"
+      Rails.logger.info "session > keys: #{session.keys}"
+      Rails.logger.info "session > user_return_to: #{session[:user_return_to]}"
+      Rails.logger.info "location: #{location}"
+      Rails.logger.info "+" * 30
+
       return unless location.present? && location.match(%r{^/#{params[:action]}/$}).present?
 
       @verified_email = current_user.email if current_user
@@ -201,7 +215,17 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def saml_callback?
+      Rails.logger.info("request path: #{request.path}")
+      Rails.logger.info("is saml callback: #{request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")}")
+
       request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
+    end
+
+    def safe_redirect?(redirect_url)
+      redirect_host = URI.parse(redirect_url).host
+
+      !(redirect_url.start_with?("http") ||
+        redirect_host.present? && redirect_host != current_organization.host)
     end
   end
 end
