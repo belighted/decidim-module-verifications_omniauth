@@ -1,4 +1,8 @@
 en:
+  devise:
+    omniauth_callbacks:
+      signed_up_but_unconfirmed_email: You have not yet confirmed your email address. %{link}
+      send_email_confirmation: Resend the confirmation email
   decidim:
     authorization_handlers:
       admin:

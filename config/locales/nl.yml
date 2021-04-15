@@ -1,4 +1,4 @@
-en:
+nl:
   decidim:
     authorization_handlers:
       admin:
@@ -22,7 +22,10 @@ en:
         explanation: You must login with another account to validate this authorization
       omniauth_decidim_handler:
         name: Omniauth Decidim
-
+    devise:
+      omniauth_registrations:
+        signed_up_but_unconfirmed_email: U heeft uw e-mailadres nog niet bevestigd. %{link}
+        send_email_confirmation: Verzend de bevestigingsmail opnieuw
     verifications:
       authorizations:
         first_login:

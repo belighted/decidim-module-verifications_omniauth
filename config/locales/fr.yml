@@ -23,6 +23,10 @@ fr:
       omniauth_decidim_handler:
         name: Omniauth Decidim
 
+    devise:
+      omniauth_registrations:
+        signed_up_but_unconfirmed_email: Vous n'avez pas encore confirmer votre address email. %{link}
+        send_email_confirmation: Renvoyez le mail de confirmation
     verifications:
       authorizations:
         first_login:

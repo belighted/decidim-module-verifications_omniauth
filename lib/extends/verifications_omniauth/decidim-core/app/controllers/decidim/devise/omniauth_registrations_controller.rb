@@ -28,7 +28,7 @@ module OmniauthRegistrationsControllerExtend
           session[:oauth_hash] = nil
           if user.active_for_authentication?
             sign_in_and_redirect user, event: :authentication
-            set_flash_message :notice, :success, kind: provider_name(@form.provider)
+            message_after_sign_in(user)
           else
             expire_data_after_sign_in!
             user.resend_confirmation_instructions unless user.confirmed?
@@ -197,6 +197,15 @@ module OmniauthRegistrationsControllerExtend
 
     def provider_name(provider)
       current_organization.enabled_omniauth_providers[provider.to_sym][:provider_name].presence || provider.capitalize
+    end
+
+    def message_after_sign_in(user)
+      if user.unconfirmed_email.present?
+        link = view_context.link_to(t("devise.omniauth_callbacks.send_email_confirmation"), new_user_confirmation_path)
+        set_flash_message(:warning, :signed_up_but_unconfirmed_email, link: link)
+      else
+        set_flash_message :notice, :success, kind: provider_name(@form.provider)
+      end
     end
 
     def saml_callback?
