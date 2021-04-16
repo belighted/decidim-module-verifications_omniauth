@@ -200,7 +200,10 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def message_after_sign_in(user)
-      if user.unconfirmed_email.present?
+      if !user.email.present? && !user.unconfirmed_email.present?
+        profile_link = view_context.link_to(t("devise.omniauth_callbacks.edit_my_profile"), account_path)
+        set_flash_message(:warning, :signed_up_but_no_email, profile_link: profile_link)
+      elsif user.unconfirmed_email.present?
         link = view_context.link_to(t("devise.omniauth_callbacks.send_email_confirmation"), new_user_confirmation_path)
         set_flash_message(:warning, :signed_up_but_unconfirmed_email, link: link)
       else

@@ -1,8 +1,10 @@
 en:
   devise:
     omniauth_callbacks:
-      signed_up_but_unconfirmed_email: You have not yet confirmed your email address. %{link}
-      send_email_confirmation: Resend the confirmation email
+      signed_up_but_unconfirmed_email: You haven’t confirmed your e-mail in you inbox yet. %{link}
+      signed_up_but_no_email: Enter your email address to stay informed of any changes. %{profile_link}
+      send_email_confirmation: Please send me the e-mail again.
+      edit_my_profile: Edit my profile
   decidim:
     authorization_handlers:
       admin:

@@ -25,8 +25,10 @@ fr:
 
     devise:
       omniauth_registrations:
-        signed_up_but_unconfirmed_email: Vous n'avez pas encore confirmer votre address email. %{link}
-        send_email_confirmation: Renvoyez le mail de confirmation
+        signed_up_but_unconfirmed_email: Vous n’avez pas encore confirmé votre adresse e-mail dans votre boite de réception. %{link}
+        signed_up_but_no_email: Indiquer votre adresse email pour rester informé de tout changement. %{profile_link}
+        edit_my_profile: Modifier mon profil
+        send_email_confirmation: Me renvoyer le mail de confirmation.
     verifications:
       authorizations:
         first_login:
