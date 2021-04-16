@@ -11,7 +11,9 @@ module OmniauthRegistrationFormExtend
 
     clear_validators!
 
-    validates :email, confirmation: true, if: proc { |u| u.email.present? }
+    validates :email, "valid_email_2/email": { disposable: true },
+      confirmation: true, if: proc { |u| u.email.present? }
+    validate :unique_email, if: proc { |u| u.email.present? }
     validates :name, presence: true
     validates :provider, presence: true
     validates :uid, presence: true
@@ -19,6 +21,16 @@ module OmniauthRegistrationFormExtend
 
     def normalized_nickname
       Decidim::UserBaseEntity.nicknamize(nickname || predefined_nickname, organization: current_organization)
+    end
+
+    def unique_email
+      return true if Decidim::User.where(
+        organization: context.current_organization,
+        email: email
+      ).where.not(id: context.current_user.id).empty?
+
+      errors.add :email, :taken
+      false
     end
 
     private

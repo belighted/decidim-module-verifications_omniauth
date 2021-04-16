@@ -65,8 +65,6 @@ module CreateOmniauthRegistrationExtend
           nickname: form.normalized_nickname,
           newsletter_notifications_at: nil,
           email_on_notification: false,
-          accepted_tos_version: organization.tos_version,
-          # managed: true,
           password: generated_password,
           password_confirmation: generated_password
         )
