@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/concern"
+require "valid_email2"
 
 module OmniauthRegistrationFormExtend
   extend ActiveSupport::Concern

@@ -8,7 +8,6 @@ PATH
       omniauth-saml (~> 1.10)
       savon (~> 2.12.0)
       signer
-      valid_email2 (~> 2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -832,7 +831,6 @@ DEPENDENCIES
   spring (~> 2.0)
   spring-watcher-listen (~> 2.0)
   uglifier (~> 4.1)
-  valid_email2 (~> 2.1)
   web-console (~> 3.7)
 
 RUBY VERSION

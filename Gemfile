@@ -13,7 +13,6 @@ gem "bootsnap"
 gem "mongoid", "~> 7.2.0"
 gem "puma", ">= 4.3.3"
 gem "uglifier", "~> 4.1"
-gem "valid_email2", "~> 2.1"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri

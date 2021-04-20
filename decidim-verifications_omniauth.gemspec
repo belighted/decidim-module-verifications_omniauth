@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_dependency "omniauth-saml", "~> 1.10"
   s.add_dependency "savon", "~> 2.12.0"
   s.add_dependency "signer"
-  s.add_dependency "valid_email2", "~> 2.1"
 
   s.add_development_dependency "decidim-dev", Decidim::VerificationsOmniauth.version
 end
