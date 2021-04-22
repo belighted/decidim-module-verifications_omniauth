@@ -10,6 +10,8 @@ module OmniAuth
     class EidCsam < OmniAuth::Strategies::EidSaml
       option :name, :csam
 
+      option :origin_param, "redirect_url"
+
       POSTAL_CODE_LOOKUP = [
         :"v3:get_person_response",
         :"v2:basic_natural_person",
