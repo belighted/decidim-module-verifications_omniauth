@@ -95,12 +95,15 @@ module OmniauthRegistrationsControllerExtend
       #Rails.logger.info "params --> #{params.to_s}"
       Rails.logger.info "request.headers[:cookie] --> #{request.headers[:cookie]}"
       Rails.logger.info "request.env[omniauth.auth] --> #{request.env.dig("omniauth.auth")&.to_h}"
-      Rails.logger.info "request.env[omniauth.origin]: #{request.env.dig("omniauth.origin")&.to_h}"
+      Rails.logger.info "request.env[omniauth.origin]: #{request.env.dig("omniauth.origin")}"
       Rails.logger.info "request.env[omniauth.params]: #{request.env.dig("omniauth.params")&.to_h}"
       Rails.logger.info "oauth_data: #{oauth_data&.to_h}"
       Rails.logger.info "with current_user" if current_user
+      Rails.logger.info "==" * 30
       Rails.logger.info "session: #{session.to_h}"
+      Rails.logger.info "session[omniauth.params]: #{session['omniauth.params']&.to_h}"
       Rails.logger.info "session[user_return_to]: #{session[:user_return_to]}"
+      Rails.logger.info "==" * 30
       slfu = store_location_for(:user, stored_location_for(:user))
       Rails.logger.info "stored_location_for(:user) --> " + slfu.to_s
 
@@ -110,7 +113,7 @@ module OmniauthRegistrationsControllerExtend
 
       Rails.logger.info "+" * 30
       Rails.logger.info "redirect_url --> #{redirect_url}"
-      Rails.logger.info "safe_redirect?(redirect_url) --> #{safe_redirect?(redirect_url).to_s}"
+      Rails.logger.info "safe_redirect?(redirect_url) --> #{(redirect_url.present? && safe_redirect?(redirect_url)).to_s}"
 
       location = if redirect_url.present? && safe_redirect?(redirect_url)
                    Rails.logger.info "==TRUE== store_location_for(:user) --> #{redirect_url}"
@@ -143,7 +146,7 @@ module OmniauthRegistrationsControllerExtend
       if Rails.env.development?
         Rails.logger.debug "+++++++++++++++++++++++++"
         Rails.logger.debug "OmniauthRegistrationsController.grant_omniauth_authorization"
-        Rails.logger.debug params
+        # Rails.logger.debug params
         Rails.logger.debug oauth_data.to_json if oauth_data
         Rails.logger.debug "+++++++++++++++++++++++++"
       end
