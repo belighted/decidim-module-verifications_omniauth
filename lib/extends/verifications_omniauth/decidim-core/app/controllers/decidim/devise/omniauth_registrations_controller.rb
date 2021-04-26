@@ -90,54 +90,39 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def manage_omniauth_authorization
-      Rails.logger.info "+++++++++++++++++++++++++"
-      Rails.logger.info "OmniauthRegistrationsController.manage_omniauth_authorization"
-      #Rails.logger.info "params --> #{params.to_s}"
-      Rails.logger.info "request.headers[:cookie] --> #{request.headers[:cookie]}"
-      Rails.logger.info "request.env[omniauth.auth] --> #{request.env.dig("omniauth.auth")&.to_h}"
-      Rails.logger.info "request.env[omniauth.origin]: #{request.env.dig("omniauth.origin")}"
-      Rails.logger.info "request.env[omniauth.params]: #{request.env.dig("omniauth.params")&.to_h}"
-      Rails.logger.info "oauth_data: #{oauth_data&.to_h}"
-      Rails.logger.info "with current_user" if current_user
-      Rails.logger.info "==" * 30
-      Rails.logger.info "session: #{session.to_h}"
-      Rails.logger.info "session[omniauth.params]: #{session['omniauth.params']&.to_h}"
-      Rails.logger.info "session[user_return_to]: #{session[:user_return_to]}"
-      Rails.logger.info "==" * 30
-      slfu = store_location_for(:user, stored_location_for(:user))
-      Rails.logger.info "stored_location_for(:user) --> " + slfu.to_s
+      # Rails.logger.info "+++++++++++++++++++++++++"
+      # Rails.logger.info "OmniauthRegistrationsController.manage_omniauth_authorization"
+      # #Rails.logger.info "params --> #{params.to_s}"
+      # Rails.logger.info "request.headers[:cookie] --> #{request.headers[:cookie]}"
+      # Rails.logger.info "request.env[omniauth.auth] --> #{request.env.dig("omniauth.auth")&.to_h}"
+      # Rails.logger.info "request.env[omniauth.origin]: #{request.env.dig("omniauth.origin")}"
+      # Rails.logger.info "request.env[omniauth.params]: #{request.env.dig("omniauth.params")&.to_h}"
+      # Rails.logger.info "oauth_data: #{oauth_data&.to_h}"
+      # Rails.logger.info "with current_user" if current_user
+      # Rails.logger.info "==" * 30
+      # Rails.logger.info "session: #{session.to_h}"
+      # Rails.logger.info "session[omniauth.params]: #{session['omniauth.params']&.to_h}"
+      # Rails.logger.info "session[user_return_to]: #{session[:user_return_to]}"
+      # Rails.logger.info "==" * 30
 
       redirect_url = request.env.dig("omniauth.params", "redirect_url") ||
         request.env.dig("omniauth.origin") ||
         session[:user_return_to]
 
-      Rails.logger.info "+" * 30
-      Rails.logger.info "redirect_url --> #{redirect_url}"
-      Rails.logger.info "safe_redirect?(redirect_url) --> #{(redirect_url.present? && safe_redirect?(redirect_url)).to_s}"
-
       location = if redirect_url.present? && safe_redirect?(redirect_url)
-                   Rails.logger.info "==TRUE== store_location_for(:user) --> #{redirect_url}"
                    store_location_for(:user, redirect_url)
                  else
-                   Rails.logger.info "==FALSE== store_location_for(:user) --> #{slfu}"
                    store_location_for(:user, stored_location_for(:user))
                  end
-
-      Rails.logger.info "location: #{location}"
-      Rails.logger.info "location match?: #{location.present? && location.match(%r{^/#{params[:action]}/$}).present?}"
-      Rails.logger.info "+" * 30
 
       return unless location.present? && location.match(%r{^/#{params[:action]}/$}).present?
 
       @verified_email = current_user.email if current_user
-      Rails.logger.info "@verified_email: #{@verified_email}"
 
       if request.env["omniauth.origin"].present? && (request.env["omniauth.origin"].split("?").first != decidim.new_user_session_url.split("?").first)
-        Rails.logger.info "store_location_for(:user) --> " + request.env["omniauth.origin"]
         store_location_for(:user, request.env["omniauth.origin"])
       else
         slf_redirect = store_location_for(:redirect, stored_location_for(:redirect))
-        Rails.logger.info "store_location_for(:redirect) --> " + slf_redirect
         store_location_for(:user, stored_location_for(:redirect))
       end
     end
@@ -190,13 +175,7 @@ module OmniauthRegistrationsControllerExtend
     private
 
     def oauth_data
-#      Rails.logger.info("========= oauth_data")
       @oauth_data ||= (oauth_hash.presence || (session[:oauth_hash] || {}).deep_symbolize_keys).slice(:provider, :uid, :info, :logout)
-#       @oauth_data[:info][:email] = '' if @oauth_data[:info].present? && @oauth_data[:info][:email].blank?
-#      Rails.logger.info("oauth_data: #{@oauth_data}")
-#      Rails.logger.info("oauth_data.dig(:info, :email): #{@oauth_data.dig(:info, :email)}")
-#      Rails.logger.info("session[:verified_email]: #{session[:verified_email]}")
-      @oauth_data
     end
 
     def user_params
@@ -259,8 +238,6 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def saml_callback?
-      # Rails.logger.info("request path: #{request.path}")
-      # Rails.logger.info("is saml callback: #{request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")}")
       request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
     end
 
