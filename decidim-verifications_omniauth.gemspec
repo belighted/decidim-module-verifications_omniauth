@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency "decidim-core", Decidim::VerificationsOmniauth.version
   s.add_dependency "decidim-verifications", Decidim::VerificationsOmniauth.version
+  s.add_dependency "mongoid", "~> 7.2.0"
   s.add_dependency "omniauth-saml", "~> 1.10"
   s.add_dependency "savon", "~> 2.12.0"
   s.add_dependency "signer"
-  s.add_dependency "mongoid", "~> 7.2.0"
 
   s.add_development_dependency "decidim-dev", Decidim::VerificationsOmniauth.version
 end

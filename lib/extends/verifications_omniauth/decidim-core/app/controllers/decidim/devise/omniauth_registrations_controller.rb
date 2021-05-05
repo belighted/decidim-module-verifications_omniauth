@@ -6,13 +6,14 @@ module OmniauthRegistrationsControllerExtend
   extend ActiveSupport::Concern
 
   included do
-    prepend_before_action :manage_omniauth_authorization, except: [:logout]
+    skip_before_action :verify_authenticity_token, if: :saml_callback?
+
+    before_action :manage_omniauth_authorization, except: [:logout]
+    # prepend_before_action :manage_omniauth_authorization, except: [:logout]
 
     before_action :configure_permitted_parameters, except: [:logout]
 
     after_action :grant_omniauth_authorization, except: [:logout]
-
-    skip_before_action :verify_authenticity_token, if: :saml_callback?
 
     def new
       @form = form(Decidim::OmniauthRegistrationForm).from_params(user_params)
@@ -28,7 +29,7 @@ module OmniauthRegistrationsControllerExtend
           session[:oauth_hash] = nil
           if user.active_for_authentication?
             sign_in_and_redirect user, event: :authentication
-            set_flash_message :notice, :success, kind: provider_name(@form.provider)
+            message_after_sign_in(user)
           else
             expire_data_after_sign_in!
             user.resend_confirmation_instructions unless user.confirmed?
@@ -39,6 +40,13 @@ module OmniauthRegistrationsControllerExtend
 
         on(:invalid) do
           session[:oauth_hash] = oauth_hash if oauth_hash.present?
+          set_flash_message :notice, :success, kind: provider_name(@form.provider)
+          render :new
+        end
+
+        on(:confirm) do |user|
+          session[:oauth_hash] = oauth_hash if oauth_hash.present?
+          sign_in user
           set_flash_message :notice, :success, kind: provider_name(@form.provider)
           render :new
         end
@@ -82,18 +90,31 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def manage_omniauth_authorization
-      # Rails.logger.debug "+++++++++++++++++++++++++"
-      # Rails.logger.debug "OmniauthRegistrationsController.manage_omniauth_authorization"
-      # Rails.logger.debug params
-      # Rails.logger.debug "with current_user" if current_user
-      # Rails.logger.debug "location_for :user --> " + store_location_for(:user, stored_location_for(:user)).to_s
-      # Rails.logger.debug "location_for :redirect --> " + store_location_for(:redirect, stored_location_for(:redirect)).to_s
-      # Rails.logger.debug "match : " + ( !!store_location_for(:user, stored_location_for(:user)).match(/^\/#{params[:action]}\/$/) ).inspect
-      # Rails.logger.debug "omniauth_origin --> " + request.env["omniauth.origin"].split("?").first.to_s if request.env["omniauth.origin"].present?
-      # Rails.logger.debug "new_user_session_url --> " + decidim.new_user_session_path.split("?").first.to_s
-      # Rails.logger.debug "+++++++++++++++++++++++++"
+      # Rails.logger.info "+++++++++++++++++++++++++"
+      # Rails.logger.info "OmniauthRegistrationsController.manage_omniauth_authorization"
+      # #Rails.logger.info "params --> #{params.to_s}"
+      # Rails.logger.info "request.headers[:cookie] --> #{request.headers[:cookie]}"
+      # Rails.logger.info "request.env[omniauth.auth] --> #{request.env.dig("omniauth.auth")&.to_h}"
+      # Rails.logger.info "request.env[omniauth.origin]: #{request.env.dig("omniauth.origin")}"
+      # Rails.logger.info "request.env[omniauth.params]: #{request.env.dig("omniauth.params")&.to_h}"
+      # Rails.logger.info "oauth_data: #{oauth_data&.to_h}"
+      # Rails.logger.info "with current_user" if current_user
+      # Rails.logger.info "==" * 30
+      # Rails.logger.info "session: #{session.to_h}"
+      # Rails.logger.info "session[omniauth.params]: #{session['omniauth.params']&.to_h}"
+      # Rails.logger.info "session[user_return_to]: #{session[:user_return_to]}"
+      # Rails.logger.info "==" * 30
 
-      location = store_location_for(:user, stored_location_for(:user))
+      redirect_url = request.env.dig("omniauth.params", "redirect_url") ||
+        request.env.dig("omniauth.origin") ||
+        session[:user_return_to]
+
+      location = if redirect_url.present? && safe_redirect?(redirect_url)
+                   store_location_for(:user, redirect_url)
+                 else
+                   store_location_for(:user, stored_location_for(:user))
+                 end
+
       return unless location.present? && location.match(%r{^/#{params[:action]}/$}).present?
 
       @verified_email = current_user.email if current_user
@@ -106,11 +127,13 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def grant_omniauth_authorization
-      Rails.logger.debug "+++++++++++++++++++++++++"
-      Rails.logger.debug "OmniauthRegistrationsController.grant_omniauth_authorization"
-      Rails.logger.debug params
-      Rails.logger.debug oauth_data.to_json if oauth_data
-      Rails.logger.debug "+++++++++++++++++++++++++"
+      if Rails.env.development?
+        Rails.logger.debug "+++++++++++++++++++++++++"
+        Rails.logger.debug "OmniauthRegistrationsController.grant_omniauth_authorization"
+        # Rails.logger.debug params
+        Rails.logger.debug oauth_data.to_json if oauth_data
+        Rails.logger.debug "+++++++++++++++++++++++++"
+      end
 
       return unless Decidim.authorization_workflows.any? { |a| a.try(:omniauth_provider).to_s == oauth_data[:provider].to_s }
 
@@ -179,7 +202,8 @@ module OmniauthRegistrationsControllerExtend
         email: oauth_data[:info][:email],
         oauth_signature: Decidim::OmniauthRegistrationForm.create_signature(oauth_data[:provider], oauth_data[:uid]),
         avatar_url: oauth_data[:info][:image],
-        raw_data: oauth_hash
+        raw_data: session['oauth_hash'] || oauth_hash,
+        step: "step1"
       }
     end
 
@@ -200,8 +224,27 @@ module OmniauthRegistrationsControllerExtend
       current_organization.enabled_omniauth_providers[provider.to_sym][:provider_name].presence || provider.capitalize
     end
 
+    def message_after_sign_in(user)
+      if !user.email.present? && !user.unconfirmed_email.present?
+        profile_link = view_context.link_to(t("devise.omniauth_callbacks.edit_my_profile"), account_path)
+        set_flash_message(:warning, :signed_up_but_no_email, profile_link: profile_link)
+      elsif user.unconfirmed_email.present?
+        link = view_context.link_to(t("devise.omniauth_callbacks.send_email_confirmation"), new_user_confirmation_path)
+        set_flash_message(:warning, :signed_up_but_unconfirmed_email, link: link)
+      else
+        set_flash_message :notice, :success, kind: provider_name(@form.provider)
+      end
+    end
+
     def saml_callback?
       request.path.end_with?("saml/callback") || request.path.end_with?("csam/callback")
+    end
+
+    def safe_redirect?(redirect_url)
+      redirect_host = URI.parse(redirect_url).host
+
+      !(redirect_url.start_with?("http") ||
+        redirect_host.present? && redirect_host != current_organization.host)
     end
   end
 end

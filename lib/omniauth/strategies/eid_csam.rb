@@ -10,6 +10,8 @@ module OmniAuth
     class EidCsam < OmniAuth::Strategies::EidSaml
       option :name, :csam
 
+      option :origin_param, "redirect_url"
+
       POSTAL_CODE_LOOKUP = [
         :"v3:get_person_response",
         :"v2:basic_natural_person",
@@ -86,6 +88,8 @@ module OmniAuth
         hash_attributes
       end
 
+      private
+
       def handle_response(raw_response, opts, settings)
         super(raw_response, opts, settings) do
           if @response_object.success?
@@ -121,8 +125,6 @@ module OmniAuth
           yield
         end
       end
-
-      private
 
       def scope_mapping(scope, options)
         scope.part_of_scopes.find { |s| s.scope_type_id.to_s == options[:scope_mapping_level_id] }
