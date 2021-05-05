@@ -122,7 +122,6 @@ module OmniauthRegistrationsControllerExtend
       if request.env["omniauth.origin"].present? && (request.env["omniauth.origin"].split("?").first != decidim.new_user_session_url.split("?").first)
         store_location_for(:user, request.env["omniauth.origin"])
       else
-        slf_redirect = store_location_for(:redirect, stored_location_for(:redirect))
         store_location_for(:user, stored_location_for(:redirect))
       end
     end
