@@ -1,4 +1,10 @@
 nl:
+  devise:
+    omniauth_callbacks:
+      signed_up_but_unconfirmed_email: U hebt uw mailadres nog niet bevestigd in uw mailbox. %{link}
+      signed_up_but_no_email: Voer uw e-mailadres in om op de hoogte te blijven van eventuele wijzigingen. %{profile_link}
+      send_email_confirmation: Stuur mij de bevestigingsmail terug.
+      edit_my_profile: Mijn profiel bewerken
   decidim:
     authorization_handlers:
       admin:
@@ -22,12 +28,6 @@ nl:
         explanation: You must login with another account to validate this authorization
       omniauth_decidim_handler:
         name: Omniauth Decidim
-    devise:
-      omniauth_registrations:
-        signed_up_but_unconfirmed_email: U hebt uw mailadres nog niet bevestigd in uw mailbox. %{link}
-        signed_up_but_no_email: Voer uw e-mailadres in om op de hoogte te blijven van eventuele wijzigingen. %{profile_link}
-        send_email_confirmation: Stuur mij de bevestigingsmail terug.
-        edit_my_profile: Mijn profiel bewerken
     verifications:
       authorizations:
         first_login:
