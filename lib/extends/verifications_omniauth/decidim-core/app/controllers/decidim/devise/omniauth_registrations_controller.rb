@@ -80,7 +80,9 @@ module OmniauthRegistrationsControllerExtend
     end
 
     def after_sign_in_path_for(user)
-      if logout_uri_is_valid?
+      if user.present? && user.blocked?
+        check_user_block_status(user)
+      elsif logout_uri_is_valid?
         oauth_data[:logout]
       elsif !pending_redirect?(user) && first_login_and_not_authorized?(user)
         decidim_verifications.authorizations_path
