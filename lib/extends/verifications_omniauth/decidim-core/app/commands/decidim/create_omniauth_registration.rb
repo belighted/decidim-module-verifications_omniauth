@@ -35,7 +35,7 @@ module CreateOmniauthRegistrationExtend
 
       transaction do
         create_or_find_user
-        create_identity
+        @identity = create_identity
       end
 
       broadcast(:confirm, @user)
@@ -70,14 +70,11 @@ module CreateOmniauthRegistrationExtend
         )
         @user.skip_confirmation!
       else
-        # for csam we need a different option to find user, since we don't have an email
-        criterias = if form.nickname.present?
-                      { nickname: form.nickname, organization: organization }
-                    else
-                      { email: verified_email, organization: organization }
-                    end
 
-        @user = Decidim::User.find_or_initialize_by(criterias)
+        email = verified_email.present? ? verified_email : form.email
+        @user = email.present? ?
+                  Decidim::User.find_or_initialize_by(email: email, organization: organization)
+                  : Decidim::User.new(organization: organization)
 
         if @user.persisted? && form.step == "step2"
           @user.email = form.email || verified_email
