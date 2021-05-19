@@ -24,6 +24,8 @@ module CreateOmniauthRegistrationExtend
         @user.tos_agreement = form.tos_agreement
         @user.accepted_tos_version = Time.current
         @user.confirmed_at = nil if verified_email != form.email
+        @user.save! # to save confirmed_at, so it will make user active for authentication (otherwise its unable to sign in)
+
         @after_confirmation = true if form.email.present? && verified_email != form.email
         @user.after_confirmation if @after_confirmation
         verify_user_confirmed(@user)
