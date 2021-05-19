@@ -19,10 +19,16 @@ module CreateOmniauthRegistrationExtend
       if existing_identity && form.step == "step2"
         return broadcast(:invalid) if form.invalid?
 
-        create_or_find_user
-        @identity = existing_identity
+        @user = existing_identity.user
+        @user.email = form.email || verified_email
+        @user.tos_agreement = form.tos_agreement
+        @user.accepted_tos_version = Time.current
+        @user.confirmed_at = nil if verified_email != form.email
+        @after_confirmation = true if form.email.present? && verified_email != form.email
         @user.after_confirmation if @after_confirmation
         verify_user_confirmed(@user)
+
+        @identity = existing_identity
         trigger_omniauth_registration
 
         return broadcast(:ok, @user)
@@ -57,7 +63,7 @@ module CreateOmniauthRegistrationExtend
     def create_or_find_user
       generated_password = SecureRandom.hex
 
-      if (verified_email || form.email).blank? && form.step == "step1"
+      if verified_email.blank?
         @user = Decidim::User.new(
           email: "",
           organization: organization,
@@ -70,19 +76,12 @@ module CreateOmniauthRegistrationExtend
         )
         @user.skip_confirmation!
       else
+        @user = Decidim::User.find_or_initialize_by(
+          email: verified_email,
+          organization: organization
+        )
 
-        email = verified_email.present? ? verified_email : form.email
-        @user = email.present? ?
-                  Decidim::User.find_or_initialize_by(email: email, organization: organization)
-                  : Decidim::User.new(organization: organization)
-
-        if @user.persisted? && form.step == "step2"
-          @user.email = form.email || verified_email
-          @user.tos_agreement = form.tos_agreement
-          @user.accepted_tos_version = Time.current
-          @user.confirmed_at = nil if verified_email != form.email
-          @after_confirmation = true if form.email.present? && verified_email != form.email
-        elsif @user.persisted?
+        if @user.persisted?
           # If user has left the account unconfirmed and later on decides to sign
           # in with omniauth with an already verified account, the account needs
           # to be marked confirmed.
