@@ -123,6 +123,16 @@ module CreateOmniauthRegistrationExtend
     end
     # rubocop:enable Metrics/PerceivedComplexity
 
+    def create_identity
+      rrn = form.raw_data.dig(:info, :rrn)
+      @user.identities.create!(
+        provider: form.provider,
+        uid: form.uid,
+        organization: organization,
+        rrn_hash: rrn.present? ? Digest::SHA256.base64digest(rrn) : nil
+      )
+    end
+
     def existing_identity
       return @existing_identity if @existing_identity.present?
 
