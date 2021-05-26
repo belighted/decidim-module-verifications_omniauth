@@ -145,9 +145,7 @@ module CreateOmniauthRegistrationExtend
 
       if rrn.present?
         if @existing_identity
-          if @existing_identity.rrn_hash != Digest::SHA256.base64digest(rrn)
-            @existing_identity.update(rrn_hash: Digest::SHA256.base64digest(rrn))
-          end
+          @existing_identity.update(rrn_hash: Digest::SHA256.base64digest(rrn)) if @existing_identity.rrn_hash.blank?
         else
           enterprise_context_identity = Decidim::Identity.find_by(
             user: organization.users,
