@@ -136,7 +136,7 @@ module CreateOmniauthRegistrationExtend
     def existing_identity
       return @existing_identity if @existing_identity.present?
 
-      @existing_identity ||= Identity.find_by(
+      @existing_identity ||= Decidim::Identity.find_by(
         user: organization.users,
         provider: form.provider,
         uid: form.uid
@@ -144,7 +144,7 @@ module CreateOmniauthRegistrationExtend
 
       rrn = form.raw_data.dig(:info, :rrn)
       if !@existing_identity && rrn.present?
-        enterprise_context_identity = Identity.find_by(
+        enterprise_context_identity = Decidim::Identity.find_by(
           user: organization.users,
           provider: 'saml',
           rrn_hash: Digest::SHA256.base64digest(rrn)
