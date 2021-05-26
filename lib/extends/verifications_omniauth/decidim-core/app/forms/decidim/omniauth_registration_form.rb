@@ -12,8 +12,9 @@ module OmniauthRegistrationFormExtend
 
     clear_validators!
 
+    validates :email, presence: true
     validates :email, "valid_email_2/email": { disposable: true },
-      confirmation: true, if: proc { |u| u.email.present? }
+      confirmation: true#, if: proc { |u| u.email.present? }
     validate :unique_email, if: proc { |u| u.email.present? }
     validates :name, presence: true
     validates :provider, presence: true

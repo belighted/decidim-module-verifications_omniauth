@@ -28,7 +28,7 @@ module CreateOmniauthRegistrationExtend
 
         @after_confirmation = true if form.email.present? && verified_email != form.email
         @user.after_confirmation if @after_confirmation
-        verify_user_confirmed(@user)
+        # verify_user_confirmed(@user)
 
         @identity = existing_identity
         trigger_omniauth_registration
@@ -53,13 +53,13 @@ module CreateOmniauthRegistrationExtend
 
     private
 
-    def verify_user_confirmed(user)
-      return true if user.confirmed?
-      return false if user.email.present? && user.email != verified_email
-
-      user.skip_confirmation!
-      user.save!
-    end
+    # def verify_user_confirmed(user)
+    #   return true if user.confirmed?
+    #   return false if user.email.present? && user.email != verified_email
+    #
+    #   user.skip_confirmation!
+    #   user.save!
+    # end
 
     # rubocop:disable Metrics/PerceivedComplexity
     # def create_or_find_user
@@ -107,17 +107,27 @@ module CreateOmniauthRegistrationExtend
     def create_or_find_user
       generated_password = SecureRandom.hex
 
-      @user = Decidim::User.new(
-        email: "",
-        organization: organization,
-        name: form.name,
-        nickname: form.normalized_nickname,
-        newsletter_notifications_at: nil,
-        email_on_notification: false,
-        password: generated_password,
-        password_confirmation: generated_password
+      @user = Decidim::User.find_or_initialize_by(
+        email: verified_email,
+        organization: organization
       )
-      @user.skip_confirmation!
+
+      if @user.persisted?
+        # If user has left the account unconfirmed and later on decides to sign
+        # in with omniauth with an already verified account, the account needs
+        # to be marked confirmed.
+        @user.skip_confirmation! if !@user.confirmed? && @user.email == verified_email
+      else
+        @user.email = form.email || verified_email
+        @user.name = form.name
+        @user.nickname = form.normalized_nickname
+        @user.newsletter_notifications_at = nil
+        @user.email_on_notification = true
+        @user.password = generated_password
+        @user.password_confirmation = generated_password
+        @user.remote_avatar_url = form.avatar_url if form.avatar_url.present?
+        @user.skip_confirmation! if verified_email == form.email
+      end
 
       @user.save!
     end
