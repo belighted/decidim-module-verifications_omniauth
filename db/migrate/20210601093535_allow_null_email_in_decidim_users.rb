@@ -2,6 +2,6 @@
 
 class AddRrnHashToIdentities < ActiveRecord::Migration[5.2]
   def change
-    add_column :decidim_identities, :rrn_hash, :string
+    change_column :decidim_users, :email, :string, null: true
   end
 end

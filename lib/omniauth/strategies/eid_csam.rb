@@ -82,7 +82,7 @@ module OmniAuth
 
           scope = scope_mapping(scope, options) if options[:scope_mapping_level_id].present?
 
-          hash_attributes["scope_id"] = scope.id
+          hash_attributes["scope_id"] = scope&.id
         end
 
         hash_attributes
