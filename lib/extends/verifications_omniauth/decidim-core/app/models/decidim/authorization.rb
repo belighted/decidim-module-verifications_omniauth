@@ -23,6 +23,7 @@ module AuthorizationExtend
     end
 
     def metadata
+      self.metadata = {} if encrypted_metadata.blank?
       encryptor.decrypt(encrypted_metadata)
     end
 
