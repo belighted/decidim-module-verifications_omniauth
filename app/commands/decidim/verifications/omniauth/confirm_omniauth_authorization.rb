@@ -8,11 +8,12 @@ module Decidim
           return broadcast(:invalid) unless form.valid?
 
           if confirmation_successful?
+            metadata = authorization.metadata
             authorization.attributes = {
               unique_id: form.unique_id,
               encrypted_metadata: MetadataEncryptor.new(
                 uid: form.unique_id
-              ).encrypt(authorization.metadata.merge(form.metadata.reject { |k, _v| k == :nickname || k == :rrn }))
+              ).encrypt(metadata.merge(form.metadata.reject { |k, _v| k == :nickname || k == :rrn }))
             }
 
             authorization.grant!
