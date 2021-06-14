@@ -37,6 +37,7 @@ module OmniauthRegistrationFormExtend
     private
 
     def predefined_nickname
+      return "" if raw_data.nil? || raw_data[:info].nil?
       "#{raw_data[:info][:first_name][0]}#{raw_data[:info][:last_name]}"
     end
   end
