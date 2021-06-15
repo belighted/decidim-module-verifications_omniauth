@@ -35,7 +35,8 @@ module AuthorizationExtend
     private
 
     def encryptor
-      Decidim::Verifications::Omniauth::MetadataEncryptor.new(uid: unique_id)
+      @encryptor = nil if saved_change_to_attribute?(:unique_id)
+      @encryptor ||= Decidim::Verifications::Omniauth::MetadataEncryptor.new(uid: unique_id)
     end
   end
 end
