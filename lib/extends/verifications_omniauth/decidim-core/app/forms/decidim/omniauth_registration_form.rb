@@ -19,6 +19,7 @@ module OmniauthRegistrationFormExtend
     validates :provider, presence: true
     validates :uid, presence: true
     validates :tos_agreement, presence: true, if: proc { |u| u.step == "step2" }
+    attribute :current_locale, String
 
     def normalized_nickname
       Decidim::UserBaseEntity.nicknamize(nickname || predefined_nickname, organization: current_organization)
