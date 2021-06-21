@@ -112,6 +112,7 @@ module CreateOmniauthRegistrationExtend
         organization: organization,
         name: form.name,
         nickname: form.normalized_nickname,
+        locale: form.current_locale,
         newsletter_notifications_at: nil,
         email_on_notification: false,
         password: generated_password,
