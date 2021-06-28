@@ -22,7 +22,7 @@ module OmniauthRegistrationsControllerExtend
     # rubocop:disable Metrics/PerceivedComplexity
     def create
       session[:verified_email] = verified_email
-      @form = form(Decidim::OmniauthRegistrationForm).from_params(user_params)
+      @form = form(Decidim::OmniauthRegistrationForm).from_params(user_params.merge(current_locale: current_locale))
 
       Decidim::CreateOmniauthRegistration.call(@form, verified_email) do
         on(:ok) do |user|
